@@ -38,7 +38,7 @@ More detail: [architecture](docs/ARCHITECTURE.md), [threat model](docs/THREAT_MO
 
 Three one-click attacks. Verdicts are computed from on-chain results.
 
-1. **Prompt injection.** The merchant's reply tells the agent to send the whole vault to an attacker. If the model refuses, the same transfer is sent to the vault directly and labeled as such. You see `REJECTED (payee_not_allowed)`, and the attacker receives nothing.
+1. **Prompt injection.** The merchant's reply tells the agent to send the whole vault to an attacker. In our live runs the real model ignored the injection, so the same transfer is then sent to the vault directly and labeled as such. You see `REJECTED (payee_not_allowed)`, and the attacker receives nothing.
 2. **Stolen agent key.** The attacker tries draining to their own account, then exceeding the per-payment cap, then spending the maximum to the allowlisted merchant. Their own account gains nothing, and spending stops at the daily cap. This really spends testnet NEAR.
 3. **Q-Day drill.** Assume the classical agent key is broken. The owner signs pause and revoke with the ML-DSA key. The drill checks the signature type on-chain, then shows NEAR refusing the old key.
 
@@ -54,7 +54,7 @@ pnpm install
 ```bash
 pnpm -r --if-present test
 ```
-You should see every suite pass: shared 5, merchant 10, agent 8, web 15.
+You should see every suite pass: shared 5, merchant 10, agent 8, web 18.
 
 ```bash
 bash scripts/test-integration.sh
@@ -76,10 +76,19 @@ pnpm --filter agent e2e
 ```
 You should see `All 12 checks passed`. This signs real ML-DSA transactions and runs the real agent and merchant. The model is scripted, so real TEE signatures aren't exercised here.
 
-### Run on testnet
+To use the real model on that same chain, put `NEAR_AI_KEY=your_key` in `.env` and run this. It uses NEAR AI credits:
 
 ```bash
-NEAR_AI_KEY=your_key pnpm --filter agent run bootstrap
+pnpm --filter agent run live
+```
+You should see a paid task, passing receipt checks with a real TEE signature, and `Live check passed`.
+
+### Run on testnet
+
+Put `NEAR_AI_KEY=your_key` in a `.env` file at the repo root, then:
+
+```bash
+pnpm --filter agent run bootstrap
 ```
 This creates four testnet accounts and writes `.env` and `apps/web/.env.local`. Then run each of these in its own terminal:
 
@@ -99,7 +108,7 @@ Open http://localhost:3000/setup, create your owner key, and enroll it with the 
 
 - **The agent key is classical (Ed25519).** Warden limits the damage if it's broken; it doesn't make the key quantum-safe.
 - **A thief can still spend up to the daily cap** on allowlisted payees before the owner reacts.
-- **Attestation is not verified on-chain or in-app.** Only a hash is anchored on-chain. The browser checks the bundle hash and the signature against the signing address, but not the Intel/NVIDIA quote, and the page says so. A signature with `signature_kind: gateway` proves less than `provider_tee`.
+- **Attestation is not verified on-chain or in-app.** Only a hash is anchored on-chain. The browser checks the bundle hash, the signature against the signing address, and that signer against the report fetched before inference, but not the Intel/NVIDIA quote itself, and the page says so. A signature with `signature_kind: gateway` proves less than `provider_tee`.
 - **Key custody is hackathon-grade.** Browser ML-DSA is not constant-time, JavaScript can't guarantee memory erasure, and hardware wallets don't support ML-DSA yet.
 - **The vault keeps its deployer key by default.** Setup leaves a full-access key on the vault for development, so it isn't locked until you delete that key yourself.
 - **The activity buffer holds 50 entries.** A stolen key can push old entries out with rejected calls. Event logs remain in chain history.

@@ -39,7 +39,10 @@ async function bundle(over: Partial<ReceiptBundle["tee"]> = {}): Promise<Receipt
       text,
       signature: sign(text),
       attestation_nonce: "n",
-      attestation_raw: "{}",
+      attestation_raw: JSON.stringify({
+        gateway_attestation: { signing_address: "0xgateway", signing_algo: "ecdsa", request_nonce: "n" },
+        model_attestations: [{ signing_address: ADDRESS, signing_algo: "ecdsa", request_nonce: "n" }],
+      }),
       request_sha256,
       response_sha256,
       unavailable_reason: null,
@@ -102,6 +105,25 @@ test("a missing signature is shown as unavailable, not as a pass", async () => {
   const check = checks.find((c) => c.label === "TEE signature");
   assert.equal(check?.state, "unavailable");
   assert.match(check?.detail ?? "", /404/);
+});
+
+test("a signer that isn't in the attestation report fails", async () => {
+  const b = await bundle({
+    attestation_raw: JSON.stringify({
+      model_attestations: [{ signing_address: "0xother", signing_algo: "ecdsa", request_nonce: "n" }],
+    }),
+  });
+  assert.equal(state(await verifyBundle(b, await receiptHash(b), true), /attestation report/), "fail");
+});
+
+test("a report from a different nonce fails", async () => {
+  const b = await bundle({ attestation_nonce: "stale" });
+  assert.equal(state(await verifyBundle(b, await receiptHash(b), true), /attestation report/), "fail");
+});
+
+test("a gateway signature is checked against the gateway report, not the model's", async () => {
+  const b = await bundle({ signature_kind: "gateway" });
+  assert.equal(state(await verifyBundle(b, await receiptHash(b), true), /attestation report/), "fail");
 });
 
 test("a hash missing from the chain fails that check", async () => {

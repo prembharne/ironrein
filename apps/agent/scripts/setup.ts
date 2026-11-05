@@ -30,7 +30,9 @@ function fail(message: string): never {
 }
 
 if (!existsSync(WASM)) fail(`No contract at ${WASM}. Run scripts/test-integration.sh first.`);
-if (existsSync(join(ROOT, ".env")) && !process.argv.includes("--force")) {
+// A .env holding only NEAR_AI_KEY is fine: it's kept and rewritten with the accounts.
+const envPath = join(ROOT, ".env");
+if (existsSync(envPath) && readFileSync(envPath, "utf8").includes("VAULT_ACCOUNT_ID=") && !process.argv.includes("--force")) {
   fail("A .env already exists. Pass --force to replace it with a new vault.");
 }
 

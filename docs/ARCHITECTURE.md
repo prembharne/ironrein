@@ -38,7 +38,7 @@ receipt_hash = lowercase_hex(sha256(utf8(canonical_json(bundle))))
 
 Canonical JSON sorts object keys and has no whitespace. It matches RFC 8785 for the value types a bundle holds, and refuses non-integer numbers. The model request, the model response and the attestation report are stored as raw strings, so their bytes stay exact and can be compared with the signed text.
 
-The receipt page checks that the bundle matches its hash, that the hash is on-chain, that the stored bytes match their hashes, that the signed text covers those hashes, and that the EIP-191 signature recovers to `signing_address`. It reports the attestation quote as not verified in-app.
+The receipt page checks that the bundle matches its hash, that the hash is on-chain, that the stored bytes match their hashes, that the signed text covers those hashes, that the EIP-191 signature recovers to `signing_address`, and that the signer and nonce match the report fetched before inference. Those report fields are consistency checks, since the quote is the source of truth. It reports the attestation quote as not verified in-app.
 
 ## Verify list results
 
@@ -49,7 +49,7 @@ The receipt page checks that the bundle matches its hash, that the hash is on-ch
 | Does a signed owner tx fit? | Yes, including a batch of two calls | E2E test |
 | ML-DSA signing on public testnet? | **Not yet run** | Needs the testnet setup |
 | Function-call keys as ML-DSA? | Not tested. The design doesn't need it | |
-| NEAR AI Cloud fields | Per the docs, recorded in `PROJECT_SPEC.md` section 15. **Not yet run with a real API key** | Docs only |
+| NEAR AI Cloud fields | Match the docs. `z-ai/glm-5.3-flash` returns a `provider_tee` ecdsa signature over `model:request_sha256:response_sha256`, and its signer matches the model attestation | `pnpm --filter agent run probe`, live run |
 | Gas for `agent_spend` | 2.5 Tgas on success, 1.8 Tgas on rejection | Integration tests |
 | Build flow | `cargo near build non-reproducible-wasm --no-abi`. A plain `cargo build` isn't valid on-chain | near-sdk compile error |
 

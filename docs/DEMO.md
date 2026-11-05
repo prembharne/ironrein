@@ -24,7 +24,7 @@ Target length is 60 to 90 seconds for the core, with the blocked attack in the f
 
 - The agent key is classical. The owner key is post-quantum.
 - Hardware-signed means the TEE signature on the inference, and only when the receipt shows it verified.
-- If the model ignores the injection, the UI says so and sends the attack directly. Show whichever happens.
+- In live runs the real model ignored the injection, and the UI then says so and sends the attack directly. Show whichever happens, and never present the direct attack as the model being fooled.
 
 ## X post requirements
 

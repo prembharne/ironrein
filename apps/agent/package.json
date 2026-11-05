@@ -9,7 +9,9 @@
     "test": "node --test --experimental-strip-types src/*.test.ts",
     "typecheck": "tsc --noEmit",
     "bootstrap": "node --env-file-if-exists=../../.env --experimental-strip-types scripts/setup.ts",
-    "e2e": "node --env-file=../../.env --experimental-strip-types --no-warnings scripts/e2e.ts"
+    "e2e": "node --env-file=../../.env --experimental-strip-types --no-warnings scripts/e2e.ts",
+    "probe": "node --env-file=../../.env --experimental-strip-types --no-warnings scripts/probe-llm.ts",
+    "live": "node --env-file=../../.env --experimental-strip-types --no-warnings scripts/live.ts"
   },
   "dependencies": {
     "@fastnear/api": "2.5.0",

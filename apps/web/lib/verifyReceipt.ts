@@ -36,6 +36,48 @@ export function recoverEip191Signer(text: string, signatureHex: string): string 
   return `0x${bytesToHex(keccak_256(point.toBytes(false).slice(1)).slice(-20))}`;
 }
 
+/**
+ * Compares the signer with the report fetched before inference, using the report that
+ * signature_kind selects. These are the report's HTTP fields: per the docs they're
+ * consistency checks, and the quote itself is the source of truth.
+ */
+function signerInReport(bundle: ReceiptBundle): Check {
+  const label = "Signer matches the attestation report";
+  const { tee } = bundle;
+  if (!tee.attestation_raw) {
+    return { label, state: "unavailable", detail: tee.unavailable_reason ?? "No report was captured." };
+  }
+  let report: any;
+  try {
+    report = JSON.parse(tee.attestation_raw);
+  } catch {
+    return { label, state: "fail", detail: "The stored report isn't valid JSON." };
+  }
+  const candidates: any[] =
+    tee.signature_kind === "provider_tee"
+      ? (report.model_attestations ?? [])
+      : tee.signature_kind === "gateway"
+        ? [report.gateway_attestation].filter(Boolean)
+        : [];
+  if (!candidates.length) {
+    return { label, state: "unavailable", detail: `No report for signature kind ${tee.signature_kind}.` };
+  }
+  const address = tee.signing_address?.toLowerCase();
+  const matches = candidates.filter(
+    (c) =>
+      c.signing_address?.toLowerCase() === address &&
+      c.signing_algo === tee.signing_algo &&
+      c.request_nonce === tee.attestation_nonce,
+  );
+  return matches.length === 1
+    ? {
+        label,
+        state: "pass",
+        detail: `Same ${tee.signature_kind} signer and nonce as the report fetched before inference.`,
+      }
+    : { label, state: "fail", detail: `${matches.length} of ${candidates.length} reports matched this signer and nonce.` };
+}
+
 export async function verifyBundle(
   bundle: ReceiptBundle,
   expectedHash: string,
@@ -100,6 +142,7 @@ export async function verifyBundle(
       } catch (err) {
         checks.push({ label: "Signature recovers to the signing address", state: "fail", detail: String(err) });
       }
+      checks.push(signerInReport(bundle));
     }
   }
 
