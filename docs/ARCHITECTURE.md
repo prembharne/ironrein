@@ -47,7 +47,7 @@ The receipt page checks that the bundle matches its hash, that the hash is on-ch
 | Protocol >= 85? | Testnet is on 88 | `status` RPC |
 | `@fastnear/ml-dsa-65` works? | Yes, in Node and in the browser, on a local protocol 88 node | E2E test and browser run |
 | Does a signed owner tx fit? | Yes, including a batch of two calls | E2E test |
-| ML-DSA signing on public testnet? | **Not yet run** | Needs the testnet setup |
+| ML-DSA signing on public testnet? | Yes. A pause and revoke batch was signed with `ml-dsa-65`, and the old agent key was then refused | `pnpm --filter agent run qday-live` |
 | Function-call keys as ML-DSA? | Not tested. The design doesn't need it | |
 | NEAR AI Cloud fields | Match the docs. `z-ai/glm-5.3-flash` returns a `provider_tee` ecdsa signature over `model:request_sha256:response_sha256`, and its signer matches the model attestation | `pnpm --filter agent run probe`, live run |
 | Gas for `agent_spend` | 2.5 Tgas on success, 1.8 Tgas on rejection | Integration tests |

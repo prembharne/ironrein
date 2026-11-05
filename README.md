@@ -104,6 +104,13 @@ pnpm --filter web dev
 
 Open http://localhost:3000/setup, create your owner key, and enroll it with the owner key saved in `.warden-keys/`. Then go to Activity and click **Run paid task**. You should see the payment in the feed, and **Verify receipt** opens its checks. Red Team is at `/redteam`.
 
+## Deployed on testnet
+
+- **Vault:** `warden-vault-1d4de2.testnet`
+- **Example ML-DSA kill switch transaction:** `Ffeo5W5zzEBVayU3dbXNc4dTwhRtdHubbDPHFtMqWBvS`, signed by `warden-owner-1d4de2.testnet`
+
+With `.env` in place, `pnpm --filter agent run live` runs a paid task and the injection with the real model, and `pnpm --filter agent run qday-live` runs the Q-Day drill with a real ML-DSA key. The drill leaves an extra ML-DSA key on the owner account, with its secret destroyed.
+
 ## Honest limitations
 
 - **The agent key is classical (Ed25519).** Warden limits the damage if it's broken; it doesn't make the key quantum-safe.
