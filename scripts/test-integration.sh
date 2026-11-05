@@ -10,10 +10,10 @@ MSYS_NO_PATHCONV=1 docker run --rm \
   -v warden-target:/target \
   -e CARGO_TARGET_DIR=/target \
   -w /work/contracts \
-  rust:1.91-bookworm bash -c '
+  rust:1.99-bookworm bash -c '
     set -euo pipefail
     rustup target add wasm32-unknown-unknown >/dev/null 2>&1
-    apt-get update -qq >/dev/null && apt-get install -qq -y pkg-config libssl-dev libudev-dev >/dev/null
+    apt-get update -qq >/dev/null && apt-get install -qq -y pkg-config libssl-dev libudev-dev cmake clang >/dev/null
     (cd vault && RUSTFLAGS="-C link-arg=-s" cargo build --release --target wasm32-unknown-unknown --lib)
     export WARDEN_WASM=/target/wasm32-unknown-unknown/release/warden_vault.wasm
     ls -l "$WARDEN_WASM"

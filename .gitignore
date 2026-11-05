@@ -10,3 +10,7 @@ apps/agent/data/
 *.keyfile
 .warden-keys/
 .DS_Store
+contracts/out/
+apps/web/.env.local
+next-env.d.ts
+*.tsbuildinfo

@@ -1,0 +1,23 @@
+{
+  "name": "agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file-if-exists=../../.env --experimental-strip-types --watch src/server.ts",
+    "start": "node --env-file-if-exists=../../.env --experimental-strip-types src/server.ts",
+    "test": "node --test --experimental-strip-types src/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "setup": "node --env-file-if-exists=../../.env --experimental-strip-types scripts/setup.ts"
+  },
+  "dependencies": {
+    "@fastnear/api": "2.5.0",
+    "@fastnear/ml-dsa-65": "2.5.0",
+    "@fastnear/utils": "2.5.0",
+    "@warden/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5",
+    "@types/node": "^22"
+  }
+}
