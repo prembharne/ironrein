@@ -434,13 +434,15 @@ Dates assume solo work, ~8 to 10 h/day. Today is Nov 5. Hard deadline Nov 14 23:
 | Date | Question | Finding | Source |
 |---|---|---|---|
 | 2026-11-05 | ML-DSA enrollment | Needs classical-signed AddKey; full-access only documented | js.fastnear.com/post-quantum |
-| | NEAR AI Cloud attestation/signature fields | _pending_ | |
-| | RPC endpoint to use (testnet) | _pending_ | |
-| | `near-sdk` / `cargo-near` / `near-workspaces` versions | _pending_ | |
-| | Merchant tx-verification RPC method | _pending_ | |
-| | Function-call keys with ML-DSA | _pending_ | |
-| | Real gas cost of `agent_spend` (to size key allowance) | _pending_ | |
-| | Hackathon extra rules / judging criteria | _pending_ | nearhackathon.com |
+| 2026-11-05 | NEAR AI Cloud attestation/signature fields | Preflight `GET /v1/attestation/report?signing_algo=&nonce=&model=&provider=near` (fields `gateway_attestation`, `model_attestations[]`). After a completion, `GET /v1/signature/{id}?signing_algo=` gives `text`, `signature`, `signing_address`, `signing_algo`, `signature_kind`. A 2xx with `error_code` or a 404 means no signature. `ecdsa` = EIP-191 recovery. Exact request/response bytes must be kept and `x-no-aliasing: true` sent. Not yet run with a real API key. | docs.near.ai/cloud/verification/cloud-api/response-signatures.md, gateway-attestation.md, model-attestations.md |
+| 2026-11-05 | TEE models | `GET /v1/model/list` entries carry `metadata.verifiable` and `metadata.attestationSupported`. Default model `z-ai/glm-5.3-flash`: verifiable, supports tools. | live API |
+| 2026-11-05 | RPC endpoint to use (testnet) | `https://test.rpc.fastnear.com` and `https://rpc.testnet.near.org` both report `protocol_version` 88 (>= 85). | live RPC |
+| 2026-11-05 | `near-sdk` / `cargo-near` / `near-workspaces` versions | near-sdk 5.30.0 (needs rustc >= 1.95), near-workspaces 0.24.0, cargo-near 0.22.0. **A plain `cargo build` is not an on-chain build**: near-sdk only uses host functions under cargo-near's `cfg(near)`. The sandbox doesn't run on Windows, so integration tests run in Docker. | crates.io; near-sdk compile error text |
+| 2026-11-05 | Merchant tx-verification RPC method | `EXPERIMENTAL_tx_status` with `wait_until: FINAL`; checks signer, `Transfer` action, receipt status. | VERIFY on a live tx |
+| | Function-call keys with ML-DSA | Not tested. The design doesn't need it. | |
+| | Real gas cost of `agent_spend` (to size key allowance) | _pending: printed by the integration tests_ | |
+| 2026-11-05 | Hackathon rules / judging | Claude Code and Codex screen each repo (reproducibility, feature verification) before humans decide. README must give "do X, see Y" steps, list libraries and AI-generated code, and include a LICENSE. Submit once via form/API, printing the payload for human approval. 13 tracks; we fit `security`, `agents`, and possibly `privacy`. Local-only demo allowed if reproducible. Results by Nov 18. | nearhackathon.com/HACKATHON.md |
+| 2026-11-05 | Spec deviations | (1) Agent uses `fetch`, not the OpenAI SDK, to keep exact bytes for signature checks. (2) Added `agent_key` to state/`VaultStatus`, so rotate can delete the old key. (3) `rotate_agent_key` resets `last_nonce`; otherwise a thief spending once with nonce u64::MAX blocks all future spends. (4) Memos are truncated to 64 bytes to bound state. (5) `new` rejects owner == vault. (6) Merchant also accepts `?malicious=1`, so Red Team needs no restart. | this repo |
 
 ---
 
