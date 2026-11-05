@@ -3,7 +3,7 @@
 // (a local fake NEAR AI endpoint), because this must run without an API key, so it
 // does NOT exercise real TEE signatures. It asserts they're reported as unavailable.
 //
-// Prereqs: `pnpm --filter agent setup` has written .env and .warden-keys.
+// Prereqs: `pnpm --filter agent run bootstrap` has written .env and .warden-keys.
 import assert from "node:assert/strict";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readdirSync, readFileSync, statSync } from "node:fs";

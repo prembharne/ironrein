@@ -1,10 +1,10 @@
 // Creates the demo accounts, deploys and configures the vault, and writes env files.
 //
 //   Testnet: node --experimental-strip-types scripts/setup.ts
-//   Sandbox: SANDBOX_RPC=http://localhost:3030 SANDBOX_ROOT_KEY=ed25519:... \
-//            node --experimental-strip-types scripts/setup.ts --sandbox
+//   Sandbox: run scripts/sandbox.sh, then the same command with --sandbox
 //
 // Secrets go only to gitignored files and are never printed.
+import { execFileSync } from "node:child_process";
 import { randomBytes } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -50,12 +50,20 @@ function assertOk(result: any, what: string) {
   return r;
 }
 
+/** The local node's root key, read from the container started by scripts/sandbox.sh. */
+function sandboxRootKey(): string {
+  const raw = execFileSync("docker", ["exec", "warden-sandbox", "cat", "/tmp/near/validator_key.json"], {
+    encoding: "utf8",
+  });
+  return JSON.parse(raw).secret_key;
+}
+
 async function createAccount(role: string, sandboxBalanceNear: string): Promise<Acct> {
   const key = privateKeyFromRandom();
   const publicKey = publicKeyFromPrivate(key);
   if (sandbox) {
     const rootId = process.env.SANDBOX_ROOT_ID ?? "test.near";
-    const rootKey = process.env.SANDBOX_ROOT_KEY ?? fail("Set SANDBOX_ROOT_KEY.");
+    const rootKey = process.env.SANDBOX_ROOT_KEY ?? sandboxRootKey();
     const id = `${role}-${suffix}.${rootId}`;
     assertOk(
       await sendTx({
