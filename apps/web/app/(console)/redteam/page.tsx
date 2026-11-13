@@ -4,9 +4,12 @@ import { yoctoToNear } from "@ironrein/shared";
 import { RequireSigner } from "@/components/Unlock";
 import { Badge, Button, Card, Notice, Steps } from "@/components/ui";
 import { useVaultStatus } from "@/components/VaultBar";
-import { continueRun, getRun, startRedTeam, type Run } from "@/lib/agentApi";
+import { continueRun, getRun, startRedTeam, type Run, type Verdict } from "@/lib/agentApi";
 import { useOwner } from "@/lib/OwnerProvider";
 import { killSwitch } from "@/lib/owner";
+import { capLeft, summarize } from "@/lib/scoreboard";
+import { spentToday } from "@/lib/spentToday";
+import { getPolicy } from "@/lib/vault";
 
 const SCENARIOS = [
   {
@@ -27,20 +30,62 @@ const SCENARIOS = [
 ];
 
 export default function RedTeamPage() {
+  const [verdicts, setVerdicts] = useState<Record<string, Verdict>>({});
+  const report = useCallback((id: string, verdict: Verdict | null) => {
+    setVerdicts((prev) => {
+      const { [id]: _old, ...rest } = prev;
+      return verdict ? { ...rest, [id]: verdict } : rest;
+    });
+  }, []);
   return (
     <>
       <Notice>Every result below comes from the chain. Nothing here is simulated in the browser.</Notice>
-      {SCENARIOS.map((s) => <Scenario key={s.id} {...s} />)}
+      <Scoreboard verdicts={Object.values(verdicts)} />
+      {SCENARIOS.map((s) => <Scenario key={s.id} {...s} onVerdict={report} />)}
     </>
   );
 }
 
-function Scenario({ id, title, what }: { id: string; title: string; what: string }) {
+/** Running totals for this visit. Starts empty and fills as attacks finish. */
+function Scoreboard({ verdicts }: { verdicts: Verdict[] }) {
+  const score = summarize(verdicts);
+  const lost = yoctoToNear(score.lostYocto.toString());
+  const tone = score.run === 0 ? "text-white" : score.failed > 0 ? "text-red-300" : "text-emerald-300";
+  return (
+    <dl className="wd-fade flex flex-wrap items-center gap-x-10 gap-y-3 rounded-2xl border border-white/10 bg-[rgba(14,18,28,0.6)] px-5 py-4 backdrop-blur-[16px]">
+      <Stat label="Attacks run">{score.run} / {SCENARIOS.length}</Stat>
+      <Stat label="Defenses held"><span className={tone}>{score.held} / {score.run}</span></Stat>
+      <Stat label="Funds lost to attackers"><span className={tone}>{lost} NEAR</span></Stat>
+    </dl>
+  );
+}
+
+function Stat({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-0.5">
+      <dt className="text-[10px] font-semibold uppercase tracking-[0.12em] text-white/45">{label}</dt>
+      <dd className="text-2xl font-medium tracking-[-0.02em] text-white">{children}</dd>
+    </div>
+  );
+}
+
+function Scenario({
+  id,
+  title,
+  what,
+  onVerdict,
+}: {
+  id: string;
+  title: string;
+  what: string;
+  onVerdict: (id: string, verdict: Verdict | null) => void;
+}) {
   const { record, signer } = useOwner();
   const { status } = useVaultStatus();
   const [run, setRun] = useState<Run | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [signing, setSigning] = useState(false);
+  const [dailyCap, setDailyCap] = useState<string | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const watch = useCallback((runId: string) => {
@@ -57,6 +102,18 @@ function Scenario({ id, title, what }: { id: string; title: string; what: string
   }, []);
 
   useEffect(() => () => clearTimeout(timer.current), []);
+
+  // The scoreboard follows this scenario's verdict.
+  const verdict = run?.verdict ?? null;
+  useEffect(() => {
+    onVerdict(id, verdict);
+  }, [id, verdict, onVerdict]);
+
+  // The stolen-key attack really spends the rest of the day's cap, so say how much that is.
+  useEffect(() => {
+    if (id === "stolen_key") getPolicy().then((p) => setDailyCap(p.daily_cap)).catch(() => setDailyCap(null));
+  }, [id, status?.spent_today]);
+  const spendLeft = dailyCap && status ? capLeft(dailyCap, spentToday(status)) : null;
 
   const start = async () => {
     setError(null);
@@ -87,6 +144,13 @@ function Scenario({ id, title, what }: { id: string; title: string; what: string
   return (
     <Card title={title}>
       <p>{what}</p>
+      {id === "stolen_key" && spendLeft !== null && (
+        <Notice tone={spendLeft === 0n ? "error" : "neutral"}>
+          {spendLeft === 0n
+            ? "Today's cap is already used up, so this attack has nothing left to spend."
+            : `This will send up to ${yoctoToNear(spendLeft.toString())} NEAR from the vault to the approved merchant, then paid tasks fail until midnight UTC. Run it last when recording.`}
+        </Notice>
+      )}
       <Button tone="danger" onClick={start} disabled={running || run?.status === "awaiting_owner"}>
         {running ? "Attack running…" : "Run attack"}
       </Button>

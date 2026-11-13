@@ -1,5 +1,7 @@
 # Ironrein
 
+[![CI](https://github.com/prembharne/ironrein/actions/workflows/ci.yml/badge.svg)](https://github.com/prembharne/ironrein/actions/workflows/ci.yml)
+
 **Quantum-safe spending limits for AI agents that hold money, enforced by a NEAR smart contract.**
 
 Even if the AI is tricked or its key is stolen, your money can't be drained, and every payment carries a TEE-signed record of why the AI paid.
@@ -31,15 +33,12 @@ The money sits in a vault contract on NEAR. The agent never holds it. It can onl
 
 ## How it works
 
-```
- Owner (browser)                 Agent service (Node)            Merchant (Node)
- ML-DSA-65 key                   NEAR AI Cloud model             402 paid API
-      │ set_policy, pause,            │ agent_spend, signed           ▲
-      │ revoke, withdraw              │ with a function-call key      │ checks the tx
-      ▼                               ▼                               │ over RPC
- ┌────────────────────────────────────────────────────┐               │
- │ Vault contract (Rust): holds NEAR, enforces policy │───transfer────┘
- └────────────────────────────────────────────────────┘
+```mermaid
+flowchart LR
+  Owner["Owner (browser)<br/>ML-DSA-65 key"] -- "set_policy, pause,<br/>revoke, withdraw" --> Vault
+  Agent["Agent service<br/>NEAR AI Cloud model (TEE)"] -- "agent_spend, signed with a<br/>function-call key" --> Vault
+  Vault["Vault contract (Rust)<br/>holds NEAR, enforces policy"] -- "transfer, only if the policy passes" --> Merchant["Approved payee<br/>(demo 402 merchant)"]
+  Merchant -. "tx proof checked over RPC" .-> Agent
 ```
 
 - **The vault decides, not the model.** `agent_spend` checks pause state, expiry, payee allowlist, per-payment cap, daily cap, nonce, receipt hash and reserve. A violation is recorded on-chain and returns a reason.
@@ -59,6 +58,31 @@ The money sits in a vault contract on NEAR. The agent never holds it. It can onl
 | Types and receipt hashing | [packages/shared](packages/shared/src/index.ts) |
 
 More detail: [architecture](docs/ARCHITECTURE.md), [threat model](docs/THREAT_MODEL.md), [demo script](docs/DEMO.md).
+
+## For reviewers
+
+Every claim above has a place to check it.
+
+| Claim | Where it is enforced | Where it is tested |
+|---|---|---|
+| The agent can only spend through one policy-checked method | `agent_spend` in [contracts/vault/src/lib.rs](contracts/vault/src/lib.rs) | 35 unit tests there, and [integration tests](contracts/integration-tests/tests/vault.rs) on a real sandbox node (`prompt_injection_payee_rejected_on_real_node`, `stolen_key_loss_is_bounded_by_daily_cap`, `function_call_key_cannot_reach_other_methods`, `revoked_key_stops_working`) |
+| The owner signs with ML-DSA-65 | [apps/web/lib/owner.ts](apps/web/lib/owner.ts) | `pnpm --filter agent e2e` signs real ML-DSA transactions on a local chain |
+| Each payment anchors the model's TEE-signed output | [apps/agent/src/llm.ts](apps/agent/src/llm.ts), [packages/shared/src/index.ts](packages/shared/src/index.ts) | [verifyReceipt.test.ts](apps/web/lib/verifyReceipt.test.ts), and the receipt page re-checks the bundle in the browser |
+| A tricked agent can't drain the vault | [apps/agent/src/redteam.ts](apps/agent/src/redteam.ts) | [redteam.test.ts](apps/agent/src/redteam.test.ts), and live runs on testnet |
+
+**Verify in two minutes, no accounts needed.** CI runs these on every push (see the badge above).
+
+```bash
+pnpm install
+pnpm test
+pnpm typecheck
+```
+
+```bash
+cd contracts/vault && cargo test --lib
+```
+
+What was run live on testnet but can't be re-run without keys: a paid task with the real model, the payee-swap attack, and the Q-Day drill signed with a real ML-DSA key. [docs/DEMO.md](docs/DEMO.md) and [PROGRESS.md](PROGRESS.md) record exactly what was verified and what was not.
 
 ## Red Team Mode
 
@@ -80,7 +104,7 @@ pnpm install
 ```bash
 pnpm -r --if-present test
 ```
-You should see every suite pass: shared 5, merchant 19, agent 17, web 42.
+You should see every suite pass: shared 5, merchant 19, agent 17, web 48.
 
 ```bash
 bash scripts/test-integration.sh
