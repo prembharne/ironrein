@@ -12,13 +12,15 @@
     "e2e": "node --env-file=../../.env --experimental-strip-types --no-warnings scripts/e2e.ts",
     "probe": "node --env-file=../../.env --experimental-strip-types --no-warnings scripts/probe-llm.ts",
     "live": "node --env-file=../../.env --experimental-strip-types --no-warnings scripts/live.ts",
-    "qday-live": "node --env-file=../../.env --experimental-strip-types --no-warnings scripts/qday-live.ts"
+    "qday-live": "node --env-file=../../.env --experimental-strip-types --no-warnings scripts/qday-live.ts",
+    "try-injection": "node --env-file=../../.env --experimental-strip-types --no-warnings scripts/try-injection.ts",
+    "sealed-key": "node --env-file=../../.env --experimental-strip-types --no-warnings scripts/sealed-key.ts"
   },
   "dependencies": {
     "@fastnear/api": "2.5.0",
     "@fastnear/ml-dsa-65": "2.5.0",
     "@fastnear/utils": "2.5.0",
-    "@warden/shared": "workspace:*"
+    "@leash/shared": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5",

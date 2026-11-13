@@ -36,5 +36,5 @@ test("each encryption uses a fresh salt and iv", async () => {
 test("parseKeyfile accepts its own output and refuses other JSON", async () => {
   const record = await encryptSeed(seed, PASS, meta);
   assert.deepEqual(parseKeyfile(JSON.stringify(record)), record);
-  assert.throws(() => parseKeyfile('{"version":1}'), /not a Warden keyfile/);
+  assert.throws(() => parseKeyfile('{"version":1}'), /not a Leash keyfile/);
 });

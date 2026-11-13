@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { nearToYocto, yoctoToNear } from "@warden/shared";
+import { nearToYocto, yoctoToNear } from "@leash/shared";
 import { RequireSigner } from "@/components/Unlock";
 import { Button, Card, Field, Notice } from "@/components/ui";
 import { useOwner } from "@/lib/OwnerProvider";
@@ -68,7 +68,7 @@ export default function PolicyPage() {
     <Card title="Spending policy">
       <p>The vault enforces these on-chain. The agent has no way to change them.</p>
       {error && <Notice tone="error">{error}</Notice>}
-      {!form && !error && <p className="text-zinc-500">Loading…</p>}
+      {!form && !error && <p className="text-white/45">Loading…</p>}
       {form && (
         <>
           <div className="grid gap-3 md:grid-cols-3">

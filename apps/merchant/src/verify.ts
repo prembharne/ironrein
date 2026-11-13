@@ -45,7 +45,7 @@ export async function fetchTx(rpcUrl: string, txHash: string, sender: string): P
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
       jsonrpc: "2.0",
-      id: "warden",
+      id: "leash",
       method: "EXPERIMENTAL_tx_status",
       params: { tx_hash: txHash, sender_account_id: sender, wait_until: "FINAL" },
     }),

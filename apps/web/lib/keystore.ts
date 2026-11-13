@@ -15,6 +15,8 @@ export interface KeyRecord {
 
 const ITERATIONS = 600_000;
 const MIN_PASSPHRASE = 10;
+// The store name and the key binding below keep the project's first name.
+// Changing either would orphan keys and keyfiles people already saved.
 const DB_NAME = "warden";
 const STORE = "owner-keys";
 const PRIMARY = "primary";
@@ -93,7 +95,7 @@ export function parseKeyfile(text: string): KeyRecord {
   const r = JSON.parse(text);
   const fields = ["account_id", "public_key", "salt", "iv", "ciphertext"];
   if (r?.version !== 1 || r.kdf !== "PBKDF2-SHA256" || !Number.isSafeInteger(r.iterations)) {
-    throw new Error("This is not a Warden keyfile.");
+    throw new Error("This is not a Leash keyfile.");
   }
   if (fields.some((f) => typeof r[f] !== "string")) throw new Error("This keyfile is incomplete.");
   return r as KeyRecord;
@@ -129,7 +131,7 @@ export function downloadKeyfile(record: KeyRecord, label: string) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `warden-${label}-${record.account_id}.keyfile`;
+  a.download = `leash-${label}-${record.account_id}.keyfile`;
   a.click();
   URL.revokeObjectURL(url);
 }

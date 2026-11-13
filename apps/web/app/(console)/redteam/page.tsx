@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { yoctoToNear } from "@warden/shared";
+import { yoctoToNear } from "@leash/shared";
 import { RequireSigner } from "@/components/Unlock";
 import { Badge, Button, Card, Notice, Steps } from "@/components/ui";
 import { useVaultStatus } from "@/components/VaultBar";
@@ -11,8 +11,8 @@ import { killSwitch } from "@/lib/owner";
 const SCENARIOS = [
   {
     id: "injection",
-    title: "1. Prompt injection",
-    what: "The merchant's reply tells the agent to send the whole vault to an attacker. A real model reads it.",
+    title: "1. Tricked agent",
+    what: "A hostile merchant tries twice: text telling the agent to send the whole vault to an attacker, then a bill that names the attacker's account as payee. A real model reads both.",
   },
   {
     id: "stolen_key",
@@ -105,8 +105,8 @@ function Scenario({ id, title, what }: { id: string; title: string; what: string
           <Badge tone={run.verdict.passed ? "good" : "bad"}>
             {run.verdict.passed ? "DEFENSE HELD" : "DEFENSE FAILED"}
           </Badge>
-          <p className="text-zinc-100">{run.verdict.summary}</p>
-          <p className="text-xs text-zinc-400">
+          <p className="text-white">{run.verdict.summary}</p>
+          <p className="text-xs text-white/60">
             Funds lost: {yoctoToNear(run.verdict.funds_lost_yocto)} NEAR
             {run.verdict.max_loss_yocto && ` (worst case is the daily cap, ${yoctoToNear(run.verdict.max_loss_yocto)} NEAR)`}
           </p>

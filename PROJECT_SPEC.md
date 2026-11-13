@@ -1,6 +1,6 @@
-# PROJECT_SPEC.md: Warden (complete project documentation)
+# PROJECT_SPEC.md: Leash (complete project documentation)
 
-> **Purpose of this file:** the single source of truth for the Warden project. An AI assistant (or a human) should be able to continue the work from this file alone, without guessing.
+> **Purpose of this file:** the single source of truth for the Leash project. An AI assistant (or a human) should be able to continue the work from this file alone, without guessing.
 > **Companion file:** `AGENTS.md` holds the working rules for the coding agent. If they conflict, this file wins; note the conflict in `PROGRESS.md`.
 > **Last researched:** 2026-11-05. Facts about NEAR, NEAR AI Cloud and the hackathon change; re-check anything marked VERIFY before relying on it.
 
@@ -19,9 +19,9 @@
 
 ## 1. Project summary
 
-**Name:** Warden (working name).
+**Name:** Leash (working name).
 **What:** A quantum-safe "leash" for AI agent money on NEAR. A smart-contract vault holds funds; an AI agent can spend only through a policy-checked method; every spend stores a hash of the AI's TEE-signed reasoning; the human owner controls everything with a post-quantum (ML-DSA-65) key through a browser console.
-**Why it exists:** AI agents will pay for services autonomously. Today the choices are "give the agent your key" (unsafe) or "approve every payment" (impractical). Warden bounds the damage from prompt injection, key theft and future quantum attacks, and makes every payment auditable.
+**Why it exists:** AI agents will pay for services autonomously. Today the choices are "give the agent your key" (unsafe) or "approve every payment" (impractical). Leash bounds the damage from prompt injection, key theft and future quantum attacks, and makes every payment auditable.
 **Pitch line:** Even if the AI is tricked or its key is stolen, your money can't be drained, and every payment carries hardware-signed proof of why the AI made it.
 **Closing line for the demo:** "NEAR shipped quantum-safe keys. We built the leash."
 
@@ -385,7 +385,7 @@ Each scenario returns an assertion verdict (pass/fail) computed from real on-cha
 ## 13. Repository layout
 
 ```
-warden/
+leash/
 ├── AGENTS.md              # rules for the coding agent
 ├── PROJECT_SPEC.md        # this file
 ├── PROGRESS.md            # running log (template below)
@@ -484,7 +484,7 @@ Dates assume solo work, ~8 to 10 h/day. Today is Nov 5. Hard deadline Nov 14 23:
 
 **README outline:** pitch; demo GIF; architecture diagram; how it works (accounts, keys, policy, receipts); quick start (contract, agent, merchant, web); Red Team Mode; honest limitations (classical agent key; off-chain attestation verification; hackathon-grade browser key custody; testnet); roadmap (private prepaid credits inspired by zkAPI, custom chains, browser extension for key isolation, hardware wallet support, token-level spend mandates); license.
 
-**X post (draft, edit freely):** "AI agents will hold money. Prompt injection and stolen keys will happen. Warden is a quantum-safe leash on NEAR: policy-enforced spending, ML-DSA owner key, and a hardware-signed receipt for every payment. Watch it defeat three attacks. [video] [repo] #NEARHackathon"
+**X post (draft, edit freely):** "AI agents will hold money. Prompt injection and stolen keys will happen. Leash is a quantum-safe leash on NEAR: policy-enforced spending, ML-DSA owner key, and a hardware-signed receipt for every payment. Watch it defeat three attacks. [video] [repo] #NEARHackathon"
 
 **Checklist:** repo public; MIT license; no secrets (scan history); deployed demo link works; video under 3 minutes with the blocked attack in the first 10 seconds; X post public; submission form completed before the deadline; contract addresses listed in README.
 
@@ -501,7 +501,7 @@ Dates assume solo work, ~8 to 10 h/day. Today is Nov 5. Hard deadline Nov 14 23:
 | Native NEAR token for MVP spends | Simplest settlement | FT/USDC (stretch), cross-chain (stretch A) |
 | Testnet first | Safe iteration | Mainnet only after testnet works and only with tiny amounts |
 | Drop zkAPI, Hyperledger, "no seed phrase" | Out of NEAR scope, not PQ, or false claim; solo time limit | Roadmap mentions only |
-| Name "Warden" | Working title | Rename freely; update README only |
+| Name "Leash" | Working title | Rename freely; update README only |
 
 ---
 

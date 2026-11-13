@@ -5,7 +5,9 @@
 | Threat | Mitigation | Residual risk | Tested by |
 |---|---|---|---|
 | Prompt injection steers the agent to pay an attacker | Allowlist and caps enforced in the vault | Agent can spend up to the daily cap on allowlisted payees | Integration, E2E, Red Team 1 |
+| Merchant names an attacker as payee on a normal-looking bill (payee swap) | Allowlist enforced in the vault. The model cannot tell, and in our runs it paid | None for accounts off the allowlist. A compromised allowlisted payee still gets paid | Unit, Red Team 1 |
 | Agent key stolen, including by a future quantum attacker | Key reaches only `agent_spend`; loss bounded by policy; owner can revoke | Loss up to the daily cap before revocation | Integration, E2E, Red Team 2 and 3 |
+| Agent key copied from the machine that runs the model | Optional sealed mode: the key is generated and kept in an OutLayer TEE, and the signer there can only call `agent_spend` | Trust moves to OutLayer and Intel TDX. The OutLayer payment key becomes the thing to steal, with the same policy limits. Not run against the live service | Unit (stand-in API) |
 | Thief uses the key to call other methods or move funds directly | NEAR refuses other methods, deposits and transfers from a function-call key | None known | Integration |
 | Thief blocks the agent by spending once with nonce `u64::MAX` | `rotate_agent_key` resets `last_nonce`. Old transactions can't replay because their key is gone | Spending is blocked until the owner rotates | Unit |
 | Gas burn by spamming a stolen key | Finite key allowance | Key runs out; owner rotates. Spam also pays from the vault's balance within that allowance | Allowance limit is enforced by NEAR, not separately tested |

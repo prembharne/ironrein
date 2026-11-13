@@ -4,7 +4,8 @@ import { randomUUID } from "node:crypto";
 import { createServer, type IncomingMessage } from "node:http";
 import { join } from "node:path";
 import { runTask, type AgentDeps, type Step, type TaskInput, type TaskResult } from "./agent.ts";
-import { createChain } from "./chain.ts";
+import { createChain, type Chain } from "./chain.ts";
+import { createSealedSpend, sealedConfigFromEnv } from "./sealed.ts";
 import { createLlm } from "./llm.ts";
 import { createReceiptStore } from "./receipts.ts";
 import { injection, qdayAfter, qdayBefore, stolenKey, type RedTeamRun } from "./redteam.ts";
@@ -25,12 +26,24 @@ const cfg = {
   merchantUrl: MERCHANT_URL,
 };
 
-const chain = createChain({
+// Sealed signer mode (OUTLAYER_PROJECT set): the agent key is inside an OutLayer TEE and
+// this machine holds no copy. Otherwise the key comes from AGENT_PRIVATE_KEY.
+const sealedCfg = sealedConfigFromEnv();
+const chainOpts = {
   networkId: process.env.NEAR_NETWORK ?? "testnet",
   rpcUrl: process.env.NEAR_RPC_URL ?? "https://test.rpc.fastnear.com",
   vaultId: required("VAULT_ACCOUNT_ID"),
-  agentPrivateKey: required("AGENT_PRIVATE_KEY"),
-});
+};
+const chain: Chain = sealedCfg
+  ? createChain({
+      ...chainOpts,
+      sealed: {
+        agentPublicKey: sealedCfg.agentPublicKey,
+        // Reads the verdict through this same chain client, from NEAR.
+        spend: (req) => createSealedSpend(sealedCfg, chainOpts.vaultId, (hash, sender) => chain.tx(hash, sender))(req),
+      },
+    })
+  : createChain({ ...chainOpts, agentPrivateKey: required("AGENT_PRIVATE_KEY") });
 const receipts = createReceiptStore(process.env.RECEIPTS_DIR ?? join(process.cwd(), "data", "receipts"));
 const deps: AgentDeps | null = process.env.NEAR_AI_KEY
   ? {
@@ -116,6 +129,7 @@ const server = createServer(async (req, res) => {
         vault: chain.vaultId,
         merchant_url: MERCHANT_URL,
         agent_public_key: chain.agentPublicKey,
+        signer: sealedCfg ? "outlayer_tee" : "local_key",
       });
     }
 

@@ -43,7 +43,7 @@ export default function KillPage() {
       <p>Pauses the vault and removes the agent&apos;s key in one transaction, signed with your ML-DSA key.</p>
       <RequireSigner>
         {!confirming ? (
-          <Button tone="danger" className="px-6 py-4 text-base" onClick={() => setConfirming(true)} disabled={busy}>
+          <Button tone="danger" size="lg" onClick={() => setConfirming(true)} disabled={busy}>
             Stop the agent now
           </Button>
         ) : (

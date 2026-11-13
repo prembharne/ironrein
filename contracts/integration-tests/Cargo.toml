@@ -1,7 +1,7 @@
 # Separate crate because near-workspaces runs a Linux/macOS sandbox node.
 # Run it through scripts/test-integration.sh (uses Docker on Windows).
 [package]
-name = "warden-integration-tests"
+name = "leash-integration-tests"
 version = "0.1.0"
 edition = "2021"
 publish = false

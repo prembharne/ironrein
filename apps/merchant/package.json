@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@warden/shared": "workspace:*"
+    "@leash/shared": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5",

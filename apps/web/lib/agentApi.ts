@@ -1,3 +1,4 @@
+import type { Settlement } from "@leash/shared";
 import { AGENT_URL } from "./config";
 
 export interface Step {
@@ -26,17 +27,23 @@ export interface Run {
 export interface Task {
   status: "running" | "done" | "failed";
   steps: Step[];
-  result?: { answer: string | null };
+  result?: { answer: string | null; settlement?: Settlement };
   error?: string;
 }
 
 async function call<T>(path: string, body?: object): Promise<T> {
-  const res = await fetch(`${AGENT_URL}${path}`, {
-    method: body ? "POST" : "GET",
-    headers: body ? { "content-type": "application/json" } : undefined,
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  const data = await res.json();
+  let res: Response;
+  try {
+    res = await fetch(`${AGENT_URL}${path}`, {
+      method: body ? "POST" : "GET",
+      headers: body ? { "content-type": "application/json" } : undefined,
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  } catch {
+    // fetch only throws on network failure: the service is down or blocked by CORS.
+    throw new Error(`Can't reach the agent service at ${AGENT_URL}. Start it with "pnpm --filter agent dev".`);
+  }
+  const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error ?? `Agent service returned ${res.status}`);
   return data;
 }

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { nearToYocto } from "@warden/shared";
+import { nearToYocto } from "@leash/shared";
 import { RequireSigner } from "@/components/Unlock";
 import { Badge, Button, Card, Field, Mono, Notice } from "@/components/ui";
 import { health } from "@/lib/agentApi";
@@ -20,7 +20,7 @@ export default function SetupPage() {
     isEnrolled(record.account_id, record.public_key).then(setEnrolled).catch(() => setEnrolled(null));
   }, [record]);
 
-  if (!ready) return <p className="text-zinc-500">Checking for a key…</p>;
+  if (!ready) return <p className="text-white/45">Checking for a key…</p>;
 
   return (
     <>
@@ -39,7 +39,7 @@ export default function SetupPage() {
               <Badge tone={signer ? "good" : "neutral"}>{signer ? "Unlocked" : "Locked"}</Badge>
             </p>
             <details>
-              <summary className="cursor-pointer text-xs text-zinc-400">Public key</summary>
+              <summary className="cursor-pointer text-xs text-white/60">Public key</summary>
               <Mono>{record.public_key}</Mono>
             </details>
             <div className="flex flex-wrap gap-2">
@@ -110,8 +110,8 @@ function ImportKey({ adopt }: { adopt: ReturnType<typeof useOwner>["adopt"] }) {
       <input
         type="file"
         accept=".keyfile,application/json"
-        aria-label="Warden keyfile"
-        className="text-sm"
+        aria-label="Leash keyfile"
+        className="text-sm text-white/70 file:mr-3 file:cursor-pointer file:rounded-full file:border-0 file:bg-white file:px-4 file:py-2 file:text-[13px] file:font-medium file:text-[#0b1d3a] hover:file:bg-white/85"
         onChange={async (e) => {
           const file = e.target.files?.[0];
           if (!file) return;

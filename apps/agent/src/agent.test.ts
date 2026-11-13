@@ -3,8 +3,8 @@ import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { receiptHash, type VaultStatus } from "@warden/shared";
-import { runTask, type Step } from "./agent.ts";
+import { receiptHash, type VaultStatus } from "@leash/shared";
+import { readSettlement, runTask, type Step } from "./agent.ts";
 import { parseSpendResult, type Chain, type SpendRequest } from "./chain.ts";
 import type { Completion, Llm } from "./llm.ts";
 import { createReceiptStore } from "./receipts.ts";
@@ -69,7 +69,7 @@ function scriptedLlm(turns: Array<Array<{ name: string; args: object }> | string
   return { llm, seen };
 }
 
-const receipts = () => createReceiptStore(mkdtempSync(join(tmpdir(), "warden-")));
+const receipts = () => createReceiptStore(mkdtempSync(join(tmpdir(), "leash-")));
 const INPUT = { goal: "buy", merchant_url: "http://127.0.0.1:1/report", max_budget_near: 1 };
 const noLog = (_: Omit<Step, "t">) => {};
 
@@ -158,4 +158,23 @@ test("parseSpendResult reads ok, rejected and failed transactions", () => {
 
 test("receipt store refuses path traversal", () => {
   assert.equal(receipts().load("../../secrets"), null);
+});
+
+const SETTLEMENT = {
+  mode: "quote", provider: "NEAR Intents 1Click", amount_in: "0.1", asset_in: "NEAR",
+  amount_out: "0.354409", min_amount_out: "350864", asset_out: "USDC", chain_out: "base",
+  asset_out_id: "nep141:base-usdc", recipient: "0xabc", time_estimate_s: 24,
+  quoted_at: "2026-11-11T09:12:47.065Z", quote_signature: null, correlation_id: null,
+};
+
+test("a merchant's settlement quote is read from its reply", () => {
+  assert.deepEqual(readSettlement(JSON.stringify({ report: {}, settlement: SETTLEMENT })), SETTLEMENT);
+});
+
+test("a missing, failed or malformed settlement is ignored", () => {
+  assert.equal(readSettlement("not json"), undefined);
+  assert.equal(readSettlement(JSON.stringify({ report: {} })), undefined);
+  assert.equal(readSettlement(JSON.stringify({ settlement: { error: "1Click 400" } })), undefined);
+  assert.equal(readSettlement(JSON.stringify({ settlement: { ...SETTLEMENT, amount_out: 5 } })), undefined);
+  assert.equal(readSettlement(JSON.stringify({ settlement: { ...SETTLEMENT, mode: "live" } })), undefined);
 });

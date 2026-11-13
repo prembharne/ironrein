@@ -11,7 +11,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
 const rpc = process.env.NEAR_RPC_URL ?? "";
 if (!rpc.includes("localhost")) throw new Error("This helper is only for a local sandbox.");
 
-const dir = join(ROOT, ".warden-keys");
+const dir = join(ROOT, ".leash-keys");
 const newest = readdirSync(dir)
   .map((f) => join(dir, f))
   .sort((a, b) => statSync(b).mtimeMs - statSync(a).mtimeMs)[0];

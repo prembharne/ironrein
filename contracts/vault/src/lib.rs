@@ -1,4 +1,4 @@
-//! Warden vault. Holds NEAR and only releases it to an AI agent through
+//! Leash vault. Holds NEAR and only releases it to an AI agent through
 //! `agent_spend`, which enforces the owner's policy on-chain.
 //!
 //! Policy violations return `SpendResult { ok: false, .. }` instead of panicking,
@@ -377,6 +377,7 @@ impl Vault {
 
     fn emit(&self, event: &str, data: near_sdk::serde_json::Value) {
         let body = json!({
+            // Keeps the project's first name so logs match the vault already deployed on testnet.
             "standard": "warden",
             "version": "1.0.0",
             "event": event,

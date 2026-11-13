@@ -1,9 +1,9 @@
 [package]
-name = "warden-vault"
+name = "leash-vault"
 version = "0.1.0"
 edition = "2021"
 license = "MIT"
-description = "Warden policy vault: an AI agent can only spend through agent_spend, inside owner-set limits."
+description = "Leash policy vault: an AI agent can only spend through agent_spend, inside owner-set limits."
 
 [lib]
 crate-type = ["cdylib", "rlib"]

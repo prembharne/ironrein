@@ -2,7 +2,7 @@
 // checking needs the exact request and response bytes, which an SDK would hide.
 // Flow per docs.near.ai/cloud/verification/cloud-api/response-signatures.
 import { randomBytes } from "node:crypto";
-import { sha256Hex, type TeeEvidence } from "@warden/shared";
+import { sha256Hex, type TeeEvidence } from "@leash/shared";
 
 export interface Completion {
   rawRequest: string;
@@ -26,6 +26,9 @@ export interface Llm {
 const SIGNING_ALGO = "ecdsa";
 const SIGNATURE_RETRIES = 3;
 const SIGNATURE_RETRY_MS = 1500;
+// A completion that hangs would freeze a task or a Red Team run, so give up and ask again.
+const COMPLETION_TIMEOUT_MS = Number(process.env.NEAR_AI_TIMEOUT_MS ?? 45_000);
+const COMPLETION_ATTEMPTS = 3;
 
 export function createLlm(opts: { apiKey: string; model: string; baseUrl?: string }): Llm {
   const baseUrl = opts.baseUrl ?? "https://cloud-api.near.ai/v1";
@@ -84,17 +87,32 @@ export function createLlm(opts: { apiKey: string; model: string; baseUrl?: strin
         tool_choice: "auto",
         stream: false,
       });
-      const res = await fetch(`${baseUrl}/chat/completions`, {
-        method: "POST",
-        headers: {
-          ...auth,
-          "content-type": "application/json",
-          "x-no-aliasing": "true",
-          "Accept-Encoding": "identity",
-        },
-        body: rawRequest,
-      });
-      const rawResponse = await res.text();
+      // The same bytes are sent on each attempt, so the receipt's request hash still matches.
+      let res: Response | undefined;
+      let rawResponse = "";
+      for (let attempt = 1; ; attempt++) {
+        try {
+          res = await fetch(`${baseUrl}/chat/completions`, {
+            method: "POST",
+            headers: {
+              ...auth,
+              "content-type": "application/json",
+              "x-no-aliasing": "true",
+              "Accept-Encoding": "identity",
+            },
+            body: rawRequest,
+            signal: AbortSignal.timeout(COMPLETION_TIMEOUT_MS),
+          });
+          rawResponse = await res.text();
+          break;
+        } catch (err) {
+          if (attempt >= COMPLETION_ATTEMPTS) {
+            throw new Error(
+              `NEAR AI Cloud did not answer after ${COMPLETION_ATTEMPTS} tries of ${COMPLETION_TIMEOUT_MS / 1000}s (${err instanceof Error ? err.name : err})`,
+            );
+          }
+        }
+      }
       if (!res.ok) {
         throw new Error(`NEAR AI Cloud returned ${res.status}: ${rawResponse.slice(0, 300)}`);
       }

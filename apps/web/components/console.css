@@ -1,0 +1,171 @@
+/* Console theme: the landing page's palette and button, carried into the dashboard. */
+
+.console-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 60% at 50% -10%, rgba(56, 189, 248, 0.32), rgba(56, 189, 248, 0.08) 45%, transparent 70%),
+    #0b0f17;
+}
+
+/* The landing's slow cyan grid, static here. */
+.console-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: linear-gradient(to bottom, black, transparent 85%);
+}
+
+/* Pill button with the glowing dot that grows into an arrow on hover (same as the landing). */
+.wd-btn {
+  --wd-ease: cubic-bezier(0.22, 0.7, 0.2, 1);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 42px;
+  padding: 0 46px 0 18px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  transition: background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.wd-btn:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
+.wd-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.wd-btn .wd-dot {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: width 0.45s var(--wd-ease), height 0.45s var(--wd-ease), right 0.45s var(--wd-ease), box-shadow 0.45s var(--wd-ease);
+}
+
+.wd-btn .wd-dot svg {
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.3s var(--wd-ease) 0.05s, transform 0.3s var(--wd-ease) 0.05s;
+}
+
+.wd-btn:not(:disabled):hover .wd-dot {
+  width: 32px;
+  height: 32px;
+  right: 5px;
+  box-shadow: none;
+}
+
+.wd-btn:not(:disabled):hover .wd-dot svg {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Primary: white pill, navy ink, cyan dot. */
+.wd-btn.primary {
+  background: #ffffff;
+  color: #0b1d3a;
+}
+.wd-btn.primary .wd-dot {
+  background: #38bdf8;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.9), 0 0 24px rgba(56, 189, 248, 0.5);
+}
+
+/* Ink: the landing's navy CTA, for use on the white navbar. */
+.wd-btn.ink {
+  background: #0b1d3a;
+  color: #ffffff;
+}
+.wd-btn.ink .wd-dot {
+  background: #38bdf8;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.9), 0 0 24px rgba(56, 189, 248, 0.5);
+}
+
+/* Danger: red pill, white dot. */
+.wd-btn.danger {
+  background: #dc2626;
+  color: #ffffff;
+}
+.wd-btn.danger:not(:disabled):hover {
+  background: #ef4444;
+}
+.wd-btn.danger .wd-dot {
+  background: #ffffff;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.7);
+}
+
+/* Ghost: glass pill. */
+.wd-btn.ghost {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+}
+.wd-btn.ghost:not(:disabled):hover {
+  background: rgba(255, 255, 255, 0.09);
+}
+.wd-btn.ghost .wd-dot {
+  background: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
+}
+
+.wd-btn.lg {
+  height: 62px;
+  padding: 0 62px 0 28px;
+  font-size: 17px;
+}
+.wd-btn.lg .wd-dot {
+  width: 14px;
+  height: 14px;
+  right: 24px;
+}
+.wd-btn.lg:not(:disabled):hover .wd-dot {
+  width: 48px;
+  height: 48px;
+  right: 7px;
+}
+
+/* Fade-up on load, as on the landing. */
+.wd-fade {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: wd-fu 0.9s cubic-bezier(0.22, 0.7, 0.2, 1) forwards;
+  animation-delay: var(--d, 0s);
+}
+
+@keyframes wd-fu {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wd-fade {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

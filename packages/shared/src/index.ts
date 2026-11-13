@@ -153,3 +153,24 @@ export async function sha256Hex(text: string): Promise<string> {
 export function receiptHash(bundle: ReceiptBundle): Promise<string> {
   return sha256Hex(canonicalJson(bundle));
 }
+
+/** What the merchant turns a NEAR payment into on another chain, via NEAR Intents. */
+export interface Settlement {
+  /** "quote": live pricing from a 1Click dry run. No funds moved. */
+  mode: "quote";
+  provider: string;
+  /** Decimal amounts, as formatted by 1Click. */
+  amount_in: string;
+  asset_in: string;
+  amount_out: string;
+  /** Smallest units of the destination asset, after slippage. */
+  min_amount_out: string;
+  asset_out: string;
+  chain_out: string;
+  asset_out_id: string;
+  recipient: string;
+  time_estimate_s: number | null;
+  quoted_at: string;
+  quote_signature: string | null;
+  correlation_id: string | null;
+}

@@ -3,7 +3,7 @@
 // (a local fake NEAR AI endpoint), because this must run without an API key, so it
 // does NOT exercise real TEE signatures. It asserts they're reported as unavailable.
 //
-// Prereqs: `pnpm --filter agent run bootstrap` has written .env and .warden-keys.
+// Prereqs: `pnpm --filter agent run bootstrap` has written .env and .leash-keys.
 import assert from "node:assert/strict";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readdirSync, readFileSync, statSync } from "node:fs";
@@ -13,7 +13,7 @@ import { fileURLToPath } from "node:url";
 import { actions, config, queryAccessKey, sendTx, view } from "@fastnear/api";
 import { generateSigner } from "@fastnear/ml-dsa-65";
 import { signerFromPrivateKey } from "@fastnear/utils";
-import { nearToYocto, receiptHash, yoctoToNear } from "@warden/shared";
+import { nearToYocto, receiptHash, yoctoToNear } from "@leash/shared";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
 const env = process.env as Record<string, string>;
@@ -25,7 +25,7 @@ const GAS = "30000000000000";
 assert.ok(VAULT, "run setup first: no VAULT_ACCOUNT_ID");
 config({ networkId: "testnet", nodeUrl: env.NEAR_RPC_URL });
 
-const keysDir = join(ROOT, ".warden-keys");
+const keysDir = join(ROOT, ".leash-keys");
 const newest = readdirSync(keysDir)
   .map((f) => join(keysDir, f))
   .sort((a, b) => statSync(b).mtimeMs - statSync(a).mtimeMs)[0];

@@ -1,7 +1,7 @@
 // Tool-calling loop. Merchant output reaches the model unfiltered on purpose: the
 // model may be fooled by a prompt injection, and the vault is the defense.
 import { randomUUID } from "node:crypto";
-import { nearToYocto, type ReceiptBundle } from "@warden/shared";
+import { nearToYocto, type ReceiptBundle, type Settlement } from "@leash/shared";
 import type { Chain, SpendOutcome } from "./chain.ts";
 import type { Completion, Llm, Preflight } from "./llm.ts";
 import type { ReceiptStore } from "./receipts.ts";
@@ -22,6 +22,8 @@ export interface TaskInput {
 export interface TaskResult {
   answer: string | null;
   payments: Array<SpendOutcome & { payee: string; amount: string; receipt_hash: string }>;
+  /** What the merchant reported about converting the payment on another chain, if it did. */
+  settlement?: Settlement;
 }
 
 const MAX_TURNS = 8;
@@ -86,6 +88,8 @@ export async function runTask(
     { role: "user", content: input.goal },
   ];
   const payments: TaskResult["payments"] = [];
+  let settlement: Settlement | undefined;
+  let settlementLogged = false;
 
   const preflight: Preflight = await llm.preflight();
   log({
@@ -101,7 +105,9 @@ export async function runTask(
       return { error: `refused: only ${merchantOrigin} may be fetched` };
     }
     const res = await fetch(url);
-    return { status: res.status, body: await res.text() };
+    const body = await res.text();
+    if (res.ok) settlement = readSettlement(body) ?? settlement;
+    return { status: res.status, body };
   };
 
   const pay = async (args: any, completion: Completion) => {
@@ -135,6 +141,13 @@ export async function runTask(
         : `REJECTED: ${outcome.reason ?? outcome.error} (payee ${args.payee})`,
       data: { ...outcome, receipt_hash, amount },
     });
+    if (outcome.sealed) {
+      log({
+        kind: "chain",
+        summary: `Signed inside the OutLayer enclave. Attestation: ${outcome.sealed.attestation_url ?? "not returned"}`,
+        data: outcome.sealed,
+      });
+    }
     if (!outcome.ok) return { ok: false, reason: outcome.reason ?? outcome.error };
     const proof = new URL(input.merchant_url);
     proof.searchParams.set("tx", outcome.tx_hash ?? "");
@@ -154,7 +167,7 @@ export async function runTask(
         : "Model finished",
       data: { content: message.content, signed: Boolean(completion.tee.signature) },
     });
-    if (!message.tool_calls?.length) return { answer: message.content ?? null, payments };
+    if (!message.tool_calls?.length) return { answer: message.content ?? null, payments, settlement };
 
     for (const call of message.tool_calls) {
       let output: unknown;
@@ -163,6 +176,16 @@ export async function runTask(
         if (call.function.name === "fetch_paid_resource") {
           output = await fetchResource(String(args.url));
           log({ kind: "tool", summary: `GET ${args.url}`, data: output });
+          if (settlement && !settlementLogged) {
+            settlementLogged = true;
+            log({
+              kind: "tool",
+              summary:
+                `Merchant settlement quote: ${settlement.amount_in} ${settlement.asset_in} becomes ` +
+                `${settlement.amount_out} ${settlement.asset_out} on ${settlement.chain_out} (${settlement.provider})`,
+              data: settlement,
+            });
+          }
         } else if (call.function.name === "pay") {
           log({ kind: "tool", summary: `pay ${args.amount_near} NEAR to ${args.payee}: ${args.reason}` });
           output = await pay(args, completion);
@@ -177,4 +200,19 @@ export async function runTask(
     }
   }
   throw new Error(`task stopped after ${MAX_TURNS} turns without finishing`);
+}
+
+/** Picks a settlement out of a merchant reply. Display only: it never reaches a payment. */
+export function readSettlement(body: string): Settlement | undefined {
+  try {
+    const s = JSON.parse(body)?.settlement;
+    const text = (v: unknown) => typeof v === "string" && v.length > 0 && v.length <= 200;
+    if (s?.mode !== "quote") return undefined;
+    for (const k of ["provider", "amount_in", "asset_in", "amount_out", "asset_out", "chain_out", "recipient"]) {
+      if (!text(s[k])) return undefined;
+    }
+    return s as Settlement;
+  } catch {
+    return undefined;
+  }
 }

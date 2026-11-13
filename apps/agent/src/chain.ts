@@ -2,7 +2,7 @@
 // the restricted function-call key. Anything else this key tries is refused by NEAR.
 import { actions, config, queryAccount, sendTx, view } from "@fastnear/api";
 import { publicKeyFromPrivate, signerFromPrivateKey } from "@fastnear/utils";
-import type { Activity, Policy, SpendResult, VaultStatus } from "@warden/shared";
+import type { Activity, Policy, SpendResult, VaultStatus } from "@leash/shared";
 
 export interface SpendRequest {
   payee: string;
@@ -17,6 +17,8 @@ export interface SpendOutcome extends SpendResult {
   submitted: boolean;
   tx_hash?: string;
   error?: string;
+  /** Set when the spend was signed inside the OutLayer enclave (sealed signer mode). */
+  sealed?: { call_id: string | null; attestation_url: string | null };
 }
 
 export interface Chain {
@@ -52,10 +54,14 @@ export function createChain(opts: {
   networkId: string;
   rpcUrl: string;
   vaultId: string;
-  agentPrivateKey: string;
+  /** Local agent key. Leave out in sealed signer mode. */
+  agentPrivateKey?: string;
+  /** Sealed signer mode: the key is in an enclave, which signs each spend. */
+  sealed?: { agentPublicKey: string; spend: (req: SpendRequest) => Promise<SpendOutcome> };
 }): Chain {
   config({ networkId: opts.networkId as "testnet" | "mainnet", nodeUrl: opts.rpcUrl });
-  const signer = signerFromPrivateKey(opts.agentPrivateKey);
+  if (!opts.sealed && !opts.agentPrivateKey) throw new Error("createChain needs agentPrivateKey or sealed");
+  const signer = opts.agentPrivateKey ? signerFromPrivateKey(opts.agentPrivateKey) : null;
   const callView = (methodName: string, args: object = {}) =>
     view({ contractId: opts.vaultId, methodName, args });
 
@@ -64,7 +70,7 @@ export function createChain(opts: {
 
   return {
     vaultId: opts.vaultId,
-    agentPublicKey: publicKeyFromPrivate(opts.agentPrivateKey),
+    agentPublicKey: opts.sealed?.agentPublicKey ?? publicKeyFromPrivate(opts.agentPrivateKey!),
     status: () => callView("get_status"),
     policy: () => callView("get_policy"),
     recent: (limit = 50) => callView("get_recent", { limit }),
@@ -74,10 +80,11 @@ export function createChain(opts: {
     },
     spend(req) {
       const run = async (): Promise<SpendOutcome> => {
+        if (opts.sealed) return opts.sealed.spend(req);
         try {
           const result = await sendTx({
             signerId: opts.vaultId,
-            signer,
+            signer: signer!,
             receiverId: opts.vaultId,
             actions: [
               actions.functionCall({
@@ -108,7 +115,7 @@ export function createChain(opts: {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           jsonrpc: "2.0",
-          id: "warden",
+          id: "leash",
           method: "EXPERIMENTAL_tx_status",
           params: { tx_hash: hash, sender_account_id: sender, wait_until: "FINAL" },
         }),

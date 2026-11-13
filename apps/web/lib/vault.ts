@@ -1,5 +1,5 @@
 // Read-only vault access through plain RPC. No keys involved.
-import type { Activity, Policy, VaultStatus } from "@warden/shared";
+import type { Activity, Policy, VaultStatus } from "@leash/shared";
 import { RPC_URL, VAULT_ID } from "./config";
 
 async function viewCall<T>(method_name: string, args: object = {}): Promise<T> {
@@ -8,7 +8,7 @@ async function viewCall<T>(method_name: string, args: object = {}): Promise<T> {
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
       jsonrpc: "2.0",
-      id: "warden",
+      id: "leash",
       method: "query",
       params: {
         request_type: "call_function",

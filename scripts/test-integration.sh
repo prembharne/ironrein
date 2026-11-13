@@ -20,8 +20,8 @@ MSYS_NO_PATHCONV=1 docker run --rm \
     export PATH="/tools/bin:$PATH"
     command -v cargo-near >/dev/null || cargo install cargo-near --locked --root /tools
     (cd vault && cargo near build non-reproducible-wasm --no-abi)
-    export WARDEN_WASM=/target/near/warden_vault.wasm
-    ls -l "$WARDEN_WASM"
-    mkdir -p /work/contracts/out && cp "$WARDEN_WASM" /work/contracts/out/warden_vault.wasm
+    export LEASH_WASM=/target/near/leash_vault.wasm
+    ls -l "$LEASH_WASM"
+    mkdir -p /work/contracts/out && cp "$LEASH_WASM" /work/contracts/out/leash_vault.wasm
     cd integration-tests && cargo test --release -- --nocapture --test-threads=2
   '

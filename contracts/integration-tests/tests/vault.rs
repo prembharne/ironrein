@@ -1,5 +1,5 @@
 //! Runs the compiled vault on a real sandbox node, signing with a real
-//! function-call key. Set WARDEN_WASM to the built contract path.
+//! function-call key. Set LEASH_WASM to the built contract path.
 
 use near_workspaces::network::Sandbox;
 use near_workspaces::types::{KeyType, NearToken, SecretKey};
@@ -23,7 +23,7 @@ struct Env {
 
 async fn setup() -> anyhow::Result<Env> {
     let worker = near_workspaces::sandbox().await?;
-    let path = std::env::var("WARDEN_WASM").expect("set WARDEN_WASM to the built contract");
+    let path = std::env::var("LEASH_WASM").expect("set LEASH_WASM to the built contract");
     let wasm = std::fs::read(path)?;
     let root = worker.root_account()?;
     let new_acct = |name: &'static str, balance: u128| {

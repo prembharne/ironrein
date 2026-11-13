@@ -6,6 +6,18 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["--filter", "web", "dev"],
       "port": 3000
+    },
+    {
+      "name": "merchant",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "merchant", "start"],
+      "port": 8788
+    },
+    {
+      "name": "agent",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "agent", "start"],
+      "port": 8787
     }
   ]
 }

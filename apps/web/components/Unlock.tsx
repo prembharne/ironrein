@@ -11,7 +11,7 @@ export function RequireSigner({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  if (!ready) return <p className="text-zinc-500">Checking for a key…</p>;
+  if (!ready) return <p className="text-white/45">Checking for a key…</p>;
   if (!record) {
     return (
       <Notice>
