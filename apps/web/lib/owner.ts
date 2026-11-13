@@ -5,6 +5,7 @@ import { generateSigner, signerFromSeed } from "@fastnear/ml-dsa-65";
 import { signerFromPrivateKey } from "@fastnear/utils";
 import type { Policy } from "@leash/shared";
 import { NETWORK, RPC_URL, VAULT_ID } from "./config";
+import { isMissingKeyError } from "./keyMissing";
 import { encryptSeed, type KeyRecord } from "./keystore";
 
 export type OwnerSigner = ReturnType<typeof generateSigner>;
@@ -52,8 +53,14 @@ export async function createKey(accountId: string, passphrase: string) {
 
 export async function isEnrolled(accountId: string, publicKey: string): Promise<boolean> {
   ensureConfig();
-  const res: any = await queryAccessKey({ accountId, publicKey, blockId: "final" });
-  return !(res?.error || res?.result?.error);
+  try {
+    const res: any = await queryAccessKey({ accountId, publicKey, blockId: "final" });
+    return !(res?.error || res?.result?.error);
+  } catch (err) {
+    // The library throws when the key is not on the account yet. That means "no", not a failed check.
+    if (isMissingKeyError(err)) return false;
+    throw err;
+  }
 }
 
 /** An ML-DSA key can't add itself: a classical full-access key signs this AddKey. */
