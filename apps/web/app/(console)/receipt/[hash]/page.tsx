@@ -1,6 +1,6 @@
 "use client";
 import { use, useEffect, useState } from "react";
-import { yoctoToNear, type ReceiptBundle } from "@leash/shared";
+import { yoctoToNear, type ReceiptBundle } from "@ironrein/shared";
 import { Badge, Card, Mono, Notice } from "@/components/ui";
 import { getReceipt } from "@/lib/agentApi";
 import { getRecent, onChainHashes } from "@/lib/vault";

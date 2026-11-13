@@ -19,7 +19,7 @@ importers:
       '@fastnear/utils':
         specifier: 2.5.0
         version: 2.5.0
-      '@leash/shared':
+      '@ironrein/shared':
         specifier: workspace:*
         version: link:../../packages/shared
     devDependencies:
@@ -32,7 +32,7 @@ importers:
 
   apps/merchant:
     dependencies:
-      '@leash/shared':
+      '@ironrein/shared':
         specifier: workspace:*
         version: link:../../packages/shared
     devDependencies:
@@ -60,7 +60,7 @@ importers:
       '@noble/hashes':
         specifier: 2.0.1
         version: 2.0.1
-      '@leash/shared':
+      '@ironrein/shared':
         specifier: workspace:*
         version: link:../../packages/shared
       lucide-react:

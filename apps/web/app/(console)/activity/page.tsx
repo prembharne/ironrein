@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { yoctoToNear, type Activity, type Settlement } from "@leash/shared";
+import { yoctoToNear, type Activity, type Settlement } from "@ironrein/shared";
 import { MoneyMap } from "@/components/MoneyMap";
 import { Badge, Button, Card, Mono, Notice, Steps } from "@/components/ui";
 import { useVaultStatus } from "@/components/VaultBar";

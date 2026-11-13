@@ -2,7 +2,7 @@
 // checking needs the exact request and response bytes, which an SDK would hide.
 // Flow per docs.near.ai/cloud/verification/cloud-api/response-signatures.
 import { randomBytes } from "node:crypto";
-import { sha256Hex, type TeeEvidence } from "@leash/shared";
+import { sha256Hex, type TeeEvidence } from "@ironrein/shared";
 
 export interface Completion {
   rawRequest: string;

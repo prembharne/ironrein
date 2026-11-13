@@ -3,7 +3,7 @@ import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { receiptHash, type VaultStatus } from "@leash/shared";
+import { receiptHash, type VaultStatus } from "@ironrein/shared";
 import { readSettlement, runTask, type Step } from "./agent.ts";
 import { parseSpendResult, type Chain, type SpendRequest } from "./chain.ts";
 import type { Completion, Llm } from "./llm.ts";
@@ -69,7 +69,7 @@ function scriptedLlm(turns: Array<Array<{ name: string; args: object }> | string
   return { llm, seen };
 }
 
-const receipts = () => createReceiptStore(mkdtempSync(join(tmpdir(), "leash-")));
+const receipts = () => createReceiptStore(mkdtempSync(join(tmpdir(), "ironrein-")));
 const INPUT = { goal: "buy", merchant_url: "http://127.0.0.1:1/report", max_budget_near: 1 };
 const noLog = (_: Omit<Step, "t">) => {};
 

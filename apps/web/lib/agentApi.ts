@@ -1,4 +1,4 @@
-import type { Settlement } from "@leash/shared";
+import type { Settlement } from "@ironrein/shared";
 import { AGENT_URL } from "./config";
 
 export interface Step {

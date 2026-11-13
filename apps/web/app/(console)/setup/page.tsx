@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { nearToYocto } from "@leash/shared";
+import { nearToYocto } from "@ironrein/shared";
 import { RequireSigner } from "@/components/Unlock";
 import { Badge, Button, Card, Field, Mono, Notice } from "@/components/ui";
 import { health } from "@/lib/agentApi";
@@ -110,7 +110,7 @@ function ImportKey({ adopt }: { adopt: ReturnType<typeof useOwner>["adopt"] }) {
       <input
         type="file"
         accept=".keyfile,application/json"
-        aria-label="Leash keyfile"
+        aria-label="Ironrein keyfile"
         className="text-sm text-white/70 file:mr-3 file:cursor-pointer file:rounded-full file:border-0 file:bg-white file:px-4 file:py-2 file:text-[13px] file:font-medium file:text-[#0b1d3a] hover:file:bg-white/85"
         onChange={async (e) => {
           const file = e.target.files?.[0];

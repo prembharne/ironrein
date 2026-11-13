@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import type { Activity } from "@leash/shared";
+import type { Activity } from "@ironrein/shared";
 import { moneyRows } from "./money.ts";
 
 const ev = (kind: Activity["kind"], payee?: string, amount?: string): Activity => ({ kind, ts: "1", payee, amount });

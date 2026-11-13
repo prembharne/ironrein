@@ -3,7 +3,7 @@
 import { actions, config, queryAccessKey, queryProtocolVersion, sendTx } from "@fastnear/api";
 import { generateSigner, signerFromSeed } from "@fastnear/ml-dsa-65";
 import { signerFromPrivateKey } from "@fastnear/utils";
-import type { Policy } from "@leash/shared";
+import type { Policy } from "@ironrein/shared";
 import { NETWORK, RPC_URL, VAULT_ID } from "./config";
 import { isMissingKeyError } from "./keyMissing";
 import { encryptSeed, type KeyRecord } from "./keystore";

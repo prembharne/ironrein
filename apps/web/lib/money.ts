@@ -1,6 +1,6 @@
 // Where the money is: who holds what, and what each account got from the vault.
 // Everything here comes from chain data (the vault's event log and account balances).
-import type { Activity, Policy } from "@leash/shared";
+import type { Activity, Policy } from "@ironrein/shared";
 import { RPC_URL } from "./config.ts";
 
 export interface MoneyRow {
@@ -50,7 +50,7 @@ export async function getBalance(accountId: string): Promise<bigint | null> {
     headers: { "content-type": "application/json" },
     body: JSON.stringify({
       jsonrpc: "2.0",
-      id: "leash",
+      id: "ironrein",
       method: "query",
       params: { request_type: "view_account", finality: "final", account_id: accountId },
     }),

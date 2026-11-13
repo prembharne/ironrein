@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { yoctoToNear, type Activity, type Policy } from "@leash/shared";
+import { yoctoToNear, type Activity, type Policy } from "@ironrein/shared";
 import { OWNER_ID, VAULT_ID } from "@/lib/config";
 import { accountUrl } from "@/lib/explorer";
 import { getBalance, moneyRows } from "@/lib/money";

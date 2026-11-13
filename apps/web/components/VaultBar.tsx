@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { yoctoToNear, type VaultStatus } from "@leash/shared";
+import { yoctoToNear, type VaultStatus } from "@ironrein/shared";
 import { VAULT_ID } from "@/lib/config";
 import { spentToday } from "@/lib/spentToday";
 import { getPolicy, getStatus } from "@/lib/vault";

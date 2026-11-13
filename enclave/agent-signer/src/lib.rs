@@ -1,4 +1,4 @@
-//! Leash agent signer. Runs inside an OutLayer TEE and holds the vault's agent key, so the
+//! Ironrein agent signer. Runs inside an OutLayer TEE and holds the vault's agent key, so the
 //! key never sits on the machine that runs the model. It does exactly two things: report
 //! the key's public half, and call `agent_spend` on the vault with it.
 //!

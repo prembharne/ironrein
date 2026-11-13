@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { nearToYocto, yoctoToNear } from "@leash/shared";
+import { nearToYocto, yoctoToNear } from "@ironrein/shared";
 import { RequireSigner } from "@/components/Unlock";
 import { Button, Card, Field, Notice } from "@/components/ui";
 import { useOwner } from "@/lib/OwnerProvider";

@@ -1,7 +1,7 @@
 // Demo paid API: GET /report answers 402 until it is given proof of payment.
 import { randomUUID } from "node:crypto";
 import { createServer } from "node:http";
-import { nearToYocto } from "@leash/shared";
+import { nearToYocto } from "@ironrein/shared";
 import { attackMode, paymentRequired } from "./invoice.ts";
 import { quoteSettlement, settleConfigFromEnv } from "./settle.ts";
 import { checkPayment, fetchTx } from "./verify.ts";

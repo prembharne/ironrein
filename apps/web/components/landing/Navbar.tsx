@@ -16,7 +16,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isOn }) => {
   return (
     <header className={`nav ${isOn ? 'on' : ''}`} id="nav" role="banner">
       {/* Brand */}
-      <a href="#" className="nav-brand" aria-label="Leash home">
+      <a href="#" className="nav-brand" aria-label="Ironrein home">
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
           <defs>
             <linearGradient id="brand-grad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -38,7 +38,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isOn }) => {
             strokeLinecap="round"
           />
         </svg>
-        <span className="brand-name">Leash</span>
+        <span className="brand-name">Ironrein</span>
       </a>
 
       {/* Nav Links */}

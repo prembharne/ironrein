@@ -1,4 +1,4 @@
-# AGENTS.md: Leash
+# AGENTS.md: Ironrein
 
 > Instructions for the AI coding agent building this project (works as `CLAUDE.md` too: copy or symlink it).
 > Read this file fully before writing any code. Re-read the "Rules" and "Definition of done" sections at the start of every session.
@@ -7,7 +7,7 @@
 
 ## 0. Mission
 
-Build **Leash**, a quantum-safe "leash" for AI agent money on **NEAR**, for the **NEAR HACKATHON** (Nov 1 to Nov 14, 2026, deadline **Nov 14 23:59 UTC**).
+Build **Ironrein**, a quantum-safe "rein" for AI agent money on **NEAR**, for the **NEAR HACKATHON** (Nov 1 to Nov 14, 2026, deadline **Nov 14 23:59 UTC**).
 
 - Target track: **AI Security & Defense** (secondary angle: Agent Economy).
 - Solo builder. Time is the scarcest resource. **A working end-to-end demo beats every extra feature.**
@@ -233,7 +233,7 @@ Three scenarios, each a one-click run, each showing the on-chain outcome:
 3. (0:20) Run a normal task: agent pays the merchant, data returns, receipt hash appears. Click **Verify receipt**.
 4. (0:40) Stolen-key attack: attacker tries to drain; capped at the daily limit.
 5. (0:55) Q-Day drill: owner signs the kill switch with the ML-DSA key; next spend fails.
-6. (1:10) Closing line: "NEAR shipped quantum-safe keys. We built the leash."
+6. (1:10) Closing line: "NEAR shipped quantum-safe keys. We built the rein."
 
 ## 14. Commands (fill in as the project takes shape)
 

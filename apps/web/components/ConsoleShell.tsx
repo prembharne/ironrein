@@ -32,9 +32,9 @@ export function ConsoleShell({ children }: { children: ReactNode }) {
       <div className="console-bg" aria-hidden />
 
       <header className="fixed inset-x-[clamp(12px,5.7vw,82px)] top-3 z-50 flex h-[54px] items-center rounded-full bg-white pr-2 pl-4 text-[#0b1d3a] shadow-[0_1px_0_rgba(11,29,58,0.04),0_10px_30px_-18px_rgba(11,29,58,0.25)] md:top-5 md:h-[60px] md:pl-[22px]">
-        <Link href="/" className="flex items-center gap-[9px]" aria-label="Leash home">
+        <Link href="/" className="flex items-center gap-[9px]" aria-label="Ironrein home">
           <BrandMark />
-          <span className="text-[17px] font-medium tracking-[-0.02em]">Leash</span>
+          <span className="text-[17px] font-medium tracking-[-0.02em]">Ironrein</span>
         </Link>
 
         <nav aria-label="Console" className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-[31px] md:flex">

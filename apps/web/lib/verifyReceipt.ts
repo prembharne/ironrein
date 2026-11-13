@@ -2,7 +2,7 @@
 // its label, because none of these verify the Intel/NVIDIA attestation quote itself.
 import { secp256k1 } from "@noble/curves/secp256k1.js";
 import { keccak_256 } from "@noble/hashes/sha3.js";
-import { receiptHash, sha256Hex, type ReceiptBundle } from "@leash/shared";
+import { receiptHash, sha256Hex, type ReceiptBundle } from "@ironrein/shared";
 
 export type CheckState = "pass" | "fail" | "unavailable";
 

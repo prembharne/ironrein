@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { yoctoToNear } from "@leash/shared";
+import { yoctoToNear } from "@ironrein/shared";
 import { RequireSigner } from "@/components/Unlock";
 import { Badge, Button, Card, Notice, Steps } from "@/components/ui";
 import { useVaultStatus } from "@/components/VaultBar";

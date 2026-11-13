@@ -1,7 +1,7 @@
 // Tool-calling loop. Merchant output reaches the model unfiltered on purpose: the
 // model may be fooled by a prompt injection, and the vault is the defense.
 import { randomUUID } from "node:crypto";
-import { nearToYocto, type ReceiptBundle, type Settlement } from "@leash/shared";
+import { nearToYocto, type ReceiptBundle, type Settlement } from "@ironrein/shared";
 import type { Chain, SpendOutcome } from "./chain.ts";
 import type { Completion, Llm, Preflight } from "./llm.ts";
 import type { ReceiptStore } from "./receipts.ts";

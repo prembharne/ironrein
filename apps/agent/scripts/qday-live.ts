@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 import { actions, config, queryProtocolVersion, sendTx, view } from "@fastnear/api";
 import { generateSigner } from "@fastnear/ml-dsa-65";
 import { signerFromPrivateKey } from "@fastnear/utils";
-import { nearToYocto } from "@leash/shared";
+import { nearToYocto } from "@ironrein/shared";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
 const AGENT = "http://127.0.0.1:8787";
@@ -19,7 +19,7 @@ const GAS = "30000000000000";
 assert.ok(VAULT, "run bootstrap first");
 config({ networkId: "testnet", nodeUrl: process.env.NEAR_RPC_URL });
 
-const keysDir = join(ROOT, ".leash-keys");
+const keysDir = join(ROOT, ".ironrein-keys");
 const newest = readdirSync(keysDir)
   .map((f) => join(keysDir, f))
   .sort((a, b) => statSync(b).mtimeMs - statSync(a).mtimeMs)[0];

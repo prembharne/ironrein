@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import type { Activity } from "@leash/shared";
+import type { Activity } from "@ironrein/shared";
 import { matchTxs, type VaultTx } from "./explorer.ts";
 
 // Real data from warden-vault-1d4de2.testnet on 2026-11-05 (events from get_recent, txs from NearBlocks).

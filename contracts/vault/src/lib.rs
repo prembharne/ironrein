@@ -1,4 +1,4 @@
-//! Leash vault. Holds NEAR and only releases it to an AI agent through
+//! Ironrein vault. Holds NEAR and only releases it to an AI agent through
 //! `agent_spend`, which enforces the owner's policy on-chain.
 //!
 //! Policy violations return `SpendResult { ok: false, .. }` instead of panicking,

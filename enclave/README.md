@@ -4,7 +4,7 @@ Optional mode. By default the agent's key is in `.env` on the machine that runs 
 
 ```
  Agent service (laptop)            OutLayer enclave                 Vault on NEAR
- model, receipts, no key   ──▶     leash-agent-signer.wasm   ──▶    agent_spend
+ model, receipts, no key   ──▶     ironrein-agent-signer.wasm   ──▶    agent_spend
                            HTTPS   holds PROTECTED_AGENT_KEY  signs  policy check
         ◀───────────────── tx hash ─────────┘
         reads the verdict from NEAR, not from the enclave
@@ -31,16 +31,16 @@ cargo test --lib
 cargo build --target wasm32-wasip2 --release
 ```
 
-The module is `target/wasm32-wasip2/release/leash-agent-signer.wasm`.
+The module is `target/wasm32-wasip2/release/ironrein-agent-signer.wasm`.
 
 ## Set up on OutLayer (testnet)
 
-1. **Deploy the module.** With the OutLayer CLI: `outlayer upload <path to the .wasm>`, then `outlayer deploy leash-agent-signer <the URL it printed>`. Your project is then `<your account>/leash-agent-signer`.
+1. **Deploy the module.** With the OutLayer CLI: `outlayer upload <path to the .wasm>`, then `outlayer deploy ironrein-agent-signer <the URL it printed>`. Your project is then `<your account>/ironrein-agent-signer`.
 2. **Create the sealed key.** On the dashboard's Secrets page, bind a secret to that project, profile `default`, and add an auto-generated secret named `PROTECTED_AGENT_KEY` of type ED25519. For the access condition, choose "One build only" with this module's SHA-256 if you want the key usable by this exact code and nothing else.
 3. **Create a payment key.** On the Payment Keys page, restrict it to this project and set a small per-call limit. It pays OutLayer for compute. It cannot move vault funds outside the policy.
 4. **Put these in `.env`:**
    ```
-   OUTLAYER_PROJECT=<your account>/leash-agent-signer
+   OUTLAYER_PROJECT=<your account>/ironrein-agent-signer
    OUTLAYER_PAYMENT_KEY=<owner:nonce:secret>
    OUTLAYER_SECRETS_ACCOUNT=<your account>
    ```

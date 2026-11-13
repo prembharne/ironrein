@@ -1,5 +1,5 @@
 // Red Team Mode. Verdicts are computed from on-chain results, never hard-coded.
-import { nearToYocto, sha256Hex, yoctoToNear } from "@leash/shared";
+import { nearToYocto, sha256Hex, yoctoToNear } from "@ironrein/shared";
 import type { AgentDeps, Step } from "./agent.ts";
 import { runTask } from "./agent.ts";
 import type { Chain, SpendOutcome } from "./chain.ts";

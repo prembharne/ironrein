@@ -2,7 +2,7 @@
 // the restricted function-call key. Anything else this key tries is refused by NEAR.
 import { actions, config, queryAccount, sendTx, view } from "@fastnear/api";
 import { publicKeyFromPrivate, signerFromPrivateKey } from "@fastnear/utils";
-import type { Activity, Policy, SpendResult, VaultStatus } from "@leash/shared";
+import type { Activity, Policy, SpendResult, VaultStatus } from "@ironrein/shared";
 
 export interface SpendRequest {
   payee: string;
@@ -115,7 +115,7 @@ export function createChain(opts: {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           jsonrpc: "2.0",
-          id: "leash",
+          id: "ironrein",
           method: "EXPERIMENTAL_tx_status",
           params: { tx_hash: hash, sender_account_id: sender, wait_until: "FINAL" },
         }),

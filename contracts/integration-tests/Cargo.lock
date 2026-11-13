@@ -3421,7 +3421,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "leash-integration-tests"
+name = "ironrein-integration-tests"
 version = "0.1.0"
 dependencies = [
  "anyhow",

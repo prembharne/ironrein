@@ -5,12 +5,12 @@
  */
 
 import React, { useMemo } from 'react';
-import { yoctoToNear, type Policy } from '@leash/shared';
+import { yoctoToNear, type Policy } from '@ironrein/shared';
 import { LetterRevealText, TextToken, tokensFromLines } from './LetterRevealText';
 import { RGB, SlideState } from '@/lib/glowMath';
 
 const SLIDE_1_TOKENS: TextToken[] = tokensFromLines([
-  'Leash is a vault contract on NEAR',
+  'Ironrein is a vault contract on NEAR',
   "that holds your agent's money,",
   'checks every payment against your policy,',
   "and refuses anything you didn't allow",

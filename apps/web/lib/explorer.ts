@@ -1,7 +1,7 @@
 // Links each vault event to the real transaction that produced it, using NearBlocks.
 // The contract's activity log has no tx hashes (a contract can't see its own tx hash),
 // so we pair events with the vault's transactions from the NearBlocks v3 API.
-import type { Activity, ActivityKind } from "@leash/shared";
+import type { Activity, ActivityKind } from "@ironrein/shared";
 import { NETWORK, VAULT_ID } from "./config.ts";
 
 const API = NETWORK === "mainnet" ? "https://api.nearblocks.io" : "https://api-testnet.nearblocks.io";

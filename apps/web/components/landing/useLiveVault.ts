@@ -1,7 +1,7 @@
 "use client";
 // Live vault state for the landing page, read from the chain over RPC (no keys, no mock data).
 import { useEffect, useState } from "react";
-import type { Activity, Policy, VaultStatus } from "@leash/shared";
+import type { Activity, Policy, VaultStatus } from "@ironrein/shared";
 import { VAULT_ID } from "@/lib/config";
 import { getVaultTxs, matchTxs } from "@/lib/explorer";
 import { getPolicy, getRecent, getStatus } from "@/lib/vault";

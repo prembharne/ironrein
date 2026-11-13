@@ -20,7 +20,7 @@
     "@fastnear/api": "2.5.0",
     "@fastnear/ml-dsa-65": "2.5.0",
     "@fastnear/utils": "2.5.0",
-    "@leash/shared": "workspace:*"
+    "@ironrein/shared": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5",

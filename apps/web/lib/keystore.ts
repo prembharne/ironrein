@@ -95,7 +95,7 @@ export function parseKeyfile(text: string): KeyRecord {
   const r = JSON.parse(text);
   const fields = ["account_id", "public_key", "salt", "iv", "ciphertext"];
   if (r?.version !== 1 || r.kdf !== "PBKDF2-SHA256" || !Number.isSafeInteger(r.iterations)) {
-    throw new Error("This is not a Leash keyfile.");
+    throw new Error("This is not a Ironrein keyfile.");
   }
   if (fields.some((f) => typeof r[f] !== "string")) throw new Error("This keyfile is incomplete.");
   return r as KeyRecord;
@@ -131,7 +131,7 @@ export function downloadKeyfile(record: KeyRecord, label: string) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `leash-${label}-${record.account_id}.keyfile`;
+  a.download = `ironrein-${label}-${record.account_id}.keyfile`;
   a.click();
   URL.revokeObjectURL(url);
 }

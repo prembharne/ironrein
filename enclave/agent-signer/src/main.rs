@@ -7,7 +7,7 @@
 
 #[cfg(target_arch = "wasm32")]
 mod enclave {
-    use leash_agent_signer::{near_private_key, parse_private_key, public_key, spend_args, Input, Output, GAS, KEY_ENV, METHOD};
+    use ironrein_agent_signer::{near_private_key, parse_private_key, public_key, spend_args, Input, Output, GAS, KEY_ENV, METHOD};
     use std::io::{self, Read, Write};
 
     wit_bindgen::generate!({

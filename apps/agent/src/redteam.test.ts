@@ -5,7 +5,7 @@ import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "node:test";
-import type { VaultStatus } from "@leash/shared";
+import type { VaultStatus } from "@ironrein/shared";
 import type { Step } from "./agent.ts";
 import type { Chain, SpendRequest } from "./chain.ts";
 import type { Completion, Llm } from "./llm.ts";
@@ -91,7 +91,7 @@ function trustingLlm(): Llm {
 const deps = (chain: Chain) => ({
   llm: trustingLlm(),
   chain,
-  receipts: createReceiptStore(mkdtempSync(join(tmpdir(), "leash-rt-"))),
+  receipts: createReceiptStore(mkdtempSync(join(tmpdir(), "ironrein-rt-"))),
 });
 
 test("a model that trusts the bill pays the swapped payee, and the vault refuses", async () => {

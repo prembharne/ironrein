@@ -4,7 +4,7 @@ import { callEnclave, createSealedSpend, sealedConfigFromEnv, OUTLAYER_TESTNET_A
 
 const cfg: SealedConfig = {
   apiUrl: "http://outlayer.test",
-  project: "owner.testnet/leash-agent-signer",
+  project: "owner.testnet/ironrein-agent-signer",
   paymentKey: "owner.testnet:1:test-secret",
   secretsProfile: "default",
   secretsAccount: "owner.testnet",
@@ -37,7 +37,7 @@ test("sealed mode is off without OUTLAYER_PROJECT and strict once it is set", ()
 test("the enclave is called with the payment key, the input and the secret reference", async () => {
   const { impl, calls } = fakeFetch(200, completed(JSON.stringify({ public_key: "ed25519:pub" })));
   const reply = await callEnclave(cfg, { op: "public_key" }, impl);
-  assert.equal(calls[0].url, "http://outlayer.test/call/owner.testnet/leash-agent-signer");
+  assert.equal(calls[0].url, "http://outlayer.test/call/owner.testnet/ironrein-agent-signer");
   assert.equal(calls[0].headers["X-Payment-Key"], cfg.paymentKey);
   assert.deepEqual(calls[0].body, { input: { op: "public_key" }, secrets_ref: { profile: "default", account_id: "owner.testnet" } });
   assert.deepEqual(reply.output, { public_key: "ed25519:pub" });

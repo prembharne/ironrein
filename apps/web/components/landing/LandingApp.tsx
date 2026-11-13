@@ -11,7 +11,7 @@ import { HeroSection } from "./HeroSection";
 import { StatementSection } from "./StatementSection";
 import { MessagingScrollBackground } from "./MessagingScrollBackground";
 import { computeSlidesMotion, SlideState } from "@/lib/glowMath";
-import { yoctoToNear } from "@leash/shared";
+import { yoctoToNear } from "@ironrein/shared";
 import { NETWORK } from "@/lib/config";
 import { useLiveVault } from "./useLiveVault";
 import "./landing.css";

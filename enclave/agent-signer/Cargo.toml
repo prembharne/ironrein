@@ -1,15 +1,15 @@
 [package]
-name = "leash-agent-signer"
+name = "ironrein-agent-signer"
 version = "0.1.0"
 edition = "2021"
 license = "MIT"
-description = "Leash agent signer: holds the vault's agent key inside an OutLayer TEE and only ever calls agent_spend."
+description = "Ironrein agent signer: holds the vault's agent key inside an OutLayer TEE and only ever calls agent_spend."
 
 [lib]
 path = "src/lib.rs"
 
 [[bin]]
-name = "leash-agent-signer"
+name = "ironrein-agent-signer"
 path = "src/main.rs"
 
 [dependencies]

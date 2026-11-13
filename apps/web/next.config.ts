@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const config: NextConfig = {
-  transpilePackages: ["@leash/shared"],
+  transpilePackages: ["@ironrein/shared"],
 };
 
 export default config;

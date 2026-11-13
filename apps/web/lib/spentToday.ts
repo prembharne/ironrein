@@ -1,4 +1,4 @@
-import type { VaultStatus } from "@leash/shared";
+import type { VaultStatus } from "@ironrein/shared";
 
 const MS_PER_DAY = 86_400_000;
 

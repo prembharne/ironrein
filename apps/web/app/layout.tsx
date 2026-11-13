@@ -7,7 +7,7 @@ import "./globals.css";
 const interTight = Inter_Tight({ subsets: ["latin"], variable: "--font-inter-tight", display: "swap" });
 
 export const metadata: Metadata = {
-  title: "Leash",
+  title: "Ironrein",
   description: "Spending limits an AI agent can't talk its way past, enforced on NEAR.",
 };
 

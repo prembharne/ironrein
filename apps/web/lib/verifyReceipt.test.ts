@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { secp256k1 } from "@noble/curves/secp256k1.js";
 import { keccak_256 } from "@noble/hashes/sha3.js";
-import { receiptHash, sha256Hex, type ReceiptBundle } from "@leash/shared";
+import { receiptHash, sha256Hex, type ReceiptBundle } from "@ironrein/shared";
 import { recoverEip191Signer, verifyBundle } from "./verifyReceipt.ts";
 
 // Private key 1 has this well-known Ethereum address.

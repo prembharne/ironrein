@@ -13,12 +13,12 @@
 - [x] Real NEAR AI Cloud on a local chain: paid task, real `provider_tee` signature verified, signer matches attestation, injection run
 - [x] Public testnet (`warden-vault-1d4de2.testnet`): paid task with the real model, receipt checks, injection run, Q-Day drill with real ML-DSA signing, restore
 - [x] README, architecture, threat model, demo script, LICENSE
-- [x] UI template: landing page at `/` (AI Studio template ported to Next, Leash copy, scroll effects unchanged). Console restyled to match: Inter Tight, navy glass cards, cyan accent, pill buttons with the glowing dot, white pill navbar. Logic in `lib/` untouched
+- [x] UI template: landing page at `/` (AI Studio template ported to Next, Ironrein copy, scroll effects unchanged). Console restyled to match: Inter Tight, navy glass cards, cyan accent, pill buttons with the glowing dot, white pill navbar. Logic in `lib/` untouched
 - [x] Every console screen renders against public testnet (read-only), desktop and 390px phone width, no horizontal overflow
 - [x] Activity feed and landing cards are proven real: each vault event links to its transaction (paired with NearBlocks v3 txns, 10/10 matched on testnet), with full date and time
 - [x] Receipt page re-verified on testnet with the agent service running: 6 checks pass, attestation quote honestly "not verified"
 - [x] Fixed: "Spent today" showed a stale total after a quiet day (contract only rolls the day on the next spend). Fixed: agent-offline errors were a bare "Failed to fetch"; now a clear message plus an online/offline badge
-- [x] Renamed Warden to Leash in code, UI, docs, package and crate names. Kept on purpose: testnet account names, the contract's event `standard` string (matches the deployed vault), the browser key store name and keyfile binding (changing them would orphan saved keys), and the Docker cache volume names. `.warden-keys/` is now `.leash-keys/`
+- [x] Renamed Warden to Ironrein in code, UI, docs, package and crate names. Kept on purpose: testnet account names, the contract's event `standard` string (matches the deployed vault), the browser key store name and keyfile binding (changing them would orphan saved keys), and the Docker cache volume names. `.warden-keys/` is now `.ironrein-keys/`
 - [x] Stretch: cross-chain settlement quote through NEAR Intents 1Click. Merchant quotes NEAR to USDC on Base after a verified payment, agent passes it through, Activity shows a card. 5 merchant tests, 2 agent tests, and one live call to the real API returned a quote
 - [x] "Where the money is" panel on Activity: vault, approved payees and refused payees with live balances and totals from the vault event log. 5 tests, and checked in the browser against testnet (merchant received 0.2 NEAR in 2 payments, attacker 0 with 2 refused attempts)
 - [x] Red Team 1 now runs two attacks with the real model: the injected text, then a payee swap (`?malicious=swap` on the merchant). 4 merchant tests and 2 scenario tests. With the real merchant and a stand-in vault, glm-5.3-flash, Qwen3.8-27B and kimi-k2.6 each tried to pay the attacker on both runs
@@ -28,7 +28,7 @@
   - Paid task started from the web app: agent paid 0.1 NEAR (tx `57LUaS1x4y7N7HJZjEgaxzKX5kKjo3MwY3vs9yY1CPpj`), the feed and "Where the money is" updated, and the receipt page showed 6 checks passing with a `provider_tee` signature
   - Red Team 1 through the agent service: the model ignored the injected text, then paid the attacker's account from the swapped bill, and the vault answered `REJECTED: payee_not_allowed`. Verdict passed, attacker received nothing. 104 seconds
 - [x] Model calls now time out after 45 seconds and are retried up to 3 times. Before this, one hung call froze a Red Team run for over two minutes. NEAR AI response times varied from 3 to 46 seconds on 2026-11-13
-- [x] Web app deployed to Vercel: https://leash-ten.vercel.app (project `leash`, root `apps/web`). Activity loads the testnet vault there. The agent accepts a comma-separated `WEB_ORIGIN`, so the hosted site can call a locally running agent
+- [x] Web app deployed to Vercel: https://ironrein.vercel.app (project `ironrein`, root `apps/web`). Activity loads the testnet vault there. The agent accepts a comma-separated `WEB_ORIGIN`, so the hosted site can call a locally running agent
 
 ## Not verified yet
 - Signing from the web app on testnet: enroll through the form, policy save, kill switch, Red Team 3. Needs the human's browser, because the owner key must live there for the demo

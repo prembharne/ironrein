@@ -11,10 +11,10 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { actions, config, createFundedTestnetAccount, queryProtocolVersion, sendTx } from "@fastnear/api";
 import { privateKeyFromRandom, publicKeyFromPrivate, signerFromPrivateKey } from "@fastnear/utils";
-import { nearToYocto } from "@leash/shared";
+import { nearToYocto } from "@ironrein/shared";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
-const WASM = join(ROOT, "contracts", "out", "leash_vault.wasm");
+const WASM = join(ROOT, "contracts", "out", "ironrein_vault.wasm");
 const sandbox = process.argv.includes("--sandbox");
 const RPC = sandbox ? process.env.SANDBOX_RPC ?? "http://localhost:3030" : process.env.NEAR_RPC_URL ?? "https://test.rpc.fastnear.com";
 const GAS = "30000000000000";
@@ -54,7 +54,7 @@ function assertOk(result: any, what: string) {
 
 /** The local node's root key, read from the container started by scripts/sandbox.sh. */
 function sandboxRootKey(): string {
-  const raw = execFileSync("docker", ["exec", "leash-sandbox", "cat", "/tmp/near/validator_key.json"], {
+  const raw = execFileSync("docker", ["exec", "ironrein-sandbox", "cat", "/tmp/near/validator_key.json"], {
     encoding: "utf8",
   });
   return JSON.parse(raw).secret_key;
@@ -83,7 +83,7 @@ async function createAccount(role: string, sandboxBalanceNear: string): Promise<
     );
     return { id, key };
   }
-  const id = `leash-${role}-${suffix}.testnet`;
+  const id = `ironrein-${role}-${suffix}.testnet`;
   await createFundedTestnetAccount({ newAccountId: id, publicKey });
   return { id, key };
 }
@@ -174,7 +174,7 @@ writeFileSync(
   Object.entries(web).map(([k, v]) => `${k}=${v}`).join("\n") + "\n",
 );
 
-const keysDir = join(ROOT, ".leash-keys");
+const keysDir = join(ROOT, ".ironrein-keys");
 mkdirSync(keysDir, { recursive: true });
 writeFileSync(
   join(keysDir, `${suffix}.json`),
@@ -188,5 +188,5 @@ Done.
   Merchant ${merchant.id}
   Attacker ${attacker.id}
 
-Wrote .env and apps/web/.env.local. Classical keys are in .leash-keys/${suffix}.json (gitignored).
+Wrote .env and apps/web/.env.local. Classical keys are in .ironrein-keys/${suffix}.json (gitignored).
 The vault still has its deployer full-access key, for development. Lock it before calling it locked.`);

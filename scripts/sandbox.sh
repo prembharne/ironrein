@@ -6,12 +6,12 @@
 set -euo pipefail
 
 if [ "${1:-}" = "stop" ]; then
-  docker rm -f leash-sandbox >/dev/null 2>&1 || true
+  docker rm -f ironrein-sandbox >/dev/null 2>&1 || true
   exit 0
 fi
 
-docker rm -f leash-sandbox >/dev/null 2>&1 || true
-MSYS_NO_PATHCONV=1 docker run -d --name leash-sandbox -p 3030:3030 -v warden-target:/target:ro rust:1.99-trixie bash -c '
+docker rm -f ironrein-sandbox >/dev/null 2>&1 || true
+MSYS_NO_PATHCONV=1 docker run -d --name ironrein-sandbox -p 3030:3030 -v warden-target:/target:ro rust:1.99-trixie bash -c '
   BIN=$(ls -d /target/release/build/near-sandbox-*/out/.near/near-sandbox-*/near-sandbox | head -1)
   "$BIN" --home /tmp/near init >/dev/null 2>&1
   # Match testnet. FastNear reuses a block hash for up to 6 hours, which outlives the
@@ -31,5 +31,5 @@ for _ in $(seq 1 60); do
   sleep 2
 done
 echo "Sandbox did not start:" >&2
-docker logs --tail 20 leash-sandbox >&2
+docker logs --tail 20 ironrein-sandbox >&2
 exit 1

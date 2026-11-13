@@ -1,7 +1,7 @@
 // Stores receipt bundles by hash, so anyone can later re-hash them against the chain.
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { receiptHash, type ReceiptBundle } from "@leash/shared";
+import { receiptHash, type ReceiptBundle } from "@ironrein/shared";
 
 export interface ReceiptStore {
   save(bundle: ReceiptBundle): Promise<string>;

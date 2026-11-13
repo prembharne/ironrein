@@ -5,7 +5,7 @@
  */
 
 import React, { useEffect, useRef } from 'react';
-import { yoctoToNear, type Activity } from '@leash/shared';
+import { yoctoToNear, type Activity } from '@ironrein/shared';
 import { clamp, lerp } from '@/lib/glowMath';
 import { VAULT_ID } from '@/lib/config';
 

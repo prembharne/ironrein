@@ -19,7 +19,7 @@ Target length is 60 to 90 seconds for the core, with the blocked attack in the f
 3. **0:20** On Activity, run a paid task. The agent pays and the data returns. Point at the settlement card: "Paid in NEAR, priced in USDC on Base through NEAR Intents." Click **Verify receipt**.
 4. **0:40** Run the stolen key attack. Attacker gains nothing, and spending stops at the daily limit.
 5. **0:55** Run the Q-Day drill. Sign with the ML-DSA key. The next attempt shows `REFUSED BY NEAR`.
-6. **1:10** "NEAR shipped quantum-safe keys. We built the leash."
+6. **1:10** "NEAR shipped quantum-safe keys. We built the rein."
 
 ## Showing where the money is
 

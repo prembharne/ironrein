@@ -1,16 +1,16 @@
-# Leash
+# Ironrein
 
 **Quantum-safe spending limits for AI agents that hold money, enforced by a NEAR smart contract.**
 
 Even if the AI is tricked or its key is stolen, your money can't be drained, and every payment carries a TEE-signed record of why the AI paid.
 
-Built at NEAR HACKATHON for the **AI Security & Defense** track. **Live site:** https://leash-ten.vercel.app (reads the testnet vault).
+Built at NEAR HACKATHON for the **AI Security & Defense** track. **Live site:** https://ironrein.vercel.app (reads the testnet vault).
 
 ## The problem
 
 AI agents are starting to pay for things on their own. Today you either hand the agent your key, so a trick or a theft empties the wallet, or you approve every payment yourself, so it isn't autonomous. And agents do get tricked: in our tests, real models paid an attacker's account in 13 of 14 runs when a bill simply named that account as payee.
 
-## What Leash does
+## What Ironrein does
 
 The money sits in a vault contract on NEAR. The agent never holds it. It can only ask the vault to pay, and the vault checks the owner's rules first: approved payees, a per-payment limit, a daily limit, and a pause switch. Anything else is refused and recorded on-chain.
 
@@ -25,7 +25,7 @@ The money sits in a vault contract on NEAR. The agent never holds it. It can onl
 
 ## Demo
 
-- Live site: https://leash-ten.vercel.app. The agent service can spend, so it isn't hosted; paid tasks and Red Team run locally (see "Try it").
+- Live site: https://ironrein.vercel.app. The agent service can spend, so it isn't hosted; paid tasks and Red Team run locally (see "Try it").
 - Walkthrough and what to say: [docs/DEMO.md](docs/DEMO.md).
 - Testnet vault: `warden-vault-1d4de2.testnet` ([explorer](https://testnet.nearblocks.io/address/warden-vault-1d4de2.testnet)).
 
@@ -128,7 +128,7 @@ pnpm --filter agent dev
 pnpm --filter web dev
 ```
 
-Open http://localhost:3000/setup, create your owner key, and enroll it with the classical owner key saved in `.leash-keys/`. This needs a NEAR testnet account and a deployed vault, which the bootstrap command above creates. Creating them from the app, and approving the post-quantum key from a connected wallet instead of pasting a key, is on the roadmap. Existing NEAR wallets don't sign with ML-DSA yet, so the owner console holds that key in the browser. Then go to Activity and click **Run paid task**. You should see the payment in the feed, and **Verify receipt** opens its checks. Red Team is at `/redteam`. The landing page is at http://localhost:3000/.
+Open http://localhost:3000/setup, create your owner key, and enroll it with the classical owner key saved in `.ironrein-keys/`. This needs a NEAR testnet account and a deployed vault, which the bootstrap command above creates. Creating them from the app, and approving the post-quantum key from a connected wallet instead of pasting a key, is on the roadmap. Existing NEAR wallets don't sign with ML-DSA yet, so the owner console holds that key in the browser. Then go to Activity and click **Run paid task**. You should see the payment in the feed, and **Verify receipt** opens its checks. Red Team is at `/redteam`. The landing page is at http://localhost:3000/.
 
 ## Cross-chain settlement (NEAR Intents)
 
@@ -151,9 +151,9 @@ The signer builds and is unit-tested, and the agent's sealed mode is tested agai
 
 ## Deployed on testnet
 
-**Live site:** https://leash-ten.vercel.app (landing page and owner console, reading the testnet vault). The agent and merchant are not hosted, because the agent service can spend. On the hosted site, paid tasks and Red Team work only for someone running those two services locally with the site listed in `WEB_ORIGIN`.
+**Live site:** https://ironrein.vercel.app (landing page and owner console, reading the testnet vault). The agent and merchant are not hosted, because the agent service can spend. On the hosted site, paid tasks and Red Team work only for someone running those two services locally with the site listed in `WEB_ORIGIN`.
 
-The project was renamed from Warden to Leash after these accounts were created. NEAR accounts can't be renamed, so on-chain names still say `warden`, and the deployed vault's event logs use `"standard": "warden"`.
+The project was renamed from Warden to Ironrein after these accounts were created. NEAR accounts can't be renamed, so on-chain names still say `warden`, and the deployed vault's event logs use `"standard": "warden"`.
 
 - **Vault:** `warden-vault-1d4de2.testnet`
 - **Example ML-DSA kill switch transaction:** `Ffeo5W5zzEBVayU3dbXNc4dTwhRtdHubbDPHFtMqWBvS`, signed by `warden-owner-1d4de2.testnet`
@@ -162,7 +162,7 @@ With `.env` in place, `pnpm --filter agent run live` runs a paid task and the in
 
 ## Honest limitations
 
-- **The agent key is classical (Ed25519).** Leash limits the damage if it's broken; it doesn't make the key quantum-safe.
+- **The agent key is classical (Ed25519).** Ironrein limits the damage if it's broken; it doesn't make the key quantum-safe.
 - **Sealed mode moves trust, it doesn't remove it.** The key is still classical, and you then trust OutLayer and Intel TDX to keep it. Whoever holds the OutLayer payment key can still spend inside the policy. This mode is untested against the live service.
 - **A thief can still spend up to the daily cap** on allowlisted payees before the owner reacts.
 - **Attestation is not verified on-chain or in-app.** Only a hash is anchored on-chain. The browser checks the bundle hash, the signature against the signing address, and that signer against the report fetched before inference, but not the Intel/NVIDIA quote itself, and the page says so. A signature with `signature_kind: gateway` proves less than `provider_tee`.

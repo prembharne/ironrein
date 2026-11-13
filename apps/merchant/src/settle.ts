@@ -10,7 +10,7 @@
 // and no deposit address, and no funds move. NEAR Intents runs on mainnet and the demo
 // vault is on testnet. A real swap means sending mainnet funds to the quote's
 // depositAddress, which this code does not do.
-import type { Settlement } from "@leash/shared";
+import type { Settlement } from "@ironrein/shared";
 
 export const ONE_CLICK_URL = "https://1click.chaindefuser.com";
 /** NEAR as 1Click lists it (wNEAR on NEAR). */
