@@ -128,6 +128,8 @@ The signer builds and is unit-tested, and the agent's sealed mode is tested agai
 
 ## Deployed on testnet
 
+**Live site:** https://leash-ten.vercel.app (landing page and owner console, reading the testnet vault). The agent and merchant are not hosted, because the agent service can spend. On the hosted site, paid tasks and Red Team work only for someone running those two services locally with the site listed in `WEB_ORIGIN`.
+
 The project was renamed from Warden to Leash after these accounts were created. NEAR accounts can't be renamed, so on-chain names still say `warden`, and the deployed vault's event logs use `"standard": "warden"`.
 
 - **Vault:** `warden-vault-1d4de2.testnet`

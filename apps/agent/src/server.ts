@@ -18,7 +18,8 @@ function required(name: string): string {
 
 const PORT = Number(process.env.PORT ?? 8787);
 const HOST = process.env.HOST ?? "127.0.0.1";
-const WEB_ORIGIN = process.env.WEB_ORIGIN ?? "http://localhost:3000";
+// Comma-separated list, so a hosted copy of the web app can reach this local service too.
+const WEB_ORIGINS = (process.env.WEB_ORIGIN ?? "http://localhost:3000").split(",").map((o) => o.trim()).filter(Boolean);
 const MERCHANT_URL = process.env.MERCHANT_URL ?? "http://localhost:8788/report";
 const cfg = {
   attacker: required("ATTACKER_ACCOUNT_ID"),
@@ -109,7 +110,10 @@ const server = createServer(async (req, res) => {
   const send = (status: number, body: unknown) => {
     res.writeHead(status, {
       "content-type": "application/json",
-      "access-control-allow-origin": WEB_ORIGIN,
+      "access-control-allow-origin": WEB_ORIGINS.includes(req.headers.origin ?? "") ? req.headers.origin! : WEB_ORIGINS[0],
+      vary: "origin",
+      // Lets a page served over https call this service on localhost (Chrome private network access).
+      "access-control-allow-private-network": "true",
       "access-control-allow-headers": "content-type",
       "access-control-allow-methods": "GET,POST,OPTIONS",
     });

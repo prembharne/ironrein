@@ -1,0 +1,19 @@
+# Only the web app and the shared package are needed to build the site.
+# Listed in full because Vercel stops reading .gitignore once this file exists.
+.env
+.env.*
+!.env.example
+.leash-keys
+*.keyfile
+*.log
+node_modules
+.next
+target
+dist
+contracts
+enclave
+scripts
+docs
+apps/agent/data
+.claude
+.vercel
