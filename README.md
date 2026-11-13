@@ -1,10 +1,33 @@
 # Leash
 
-Spending limits for AI agents that hold money, enforced by a NEAR smart contract.
+**Quantum-safe spending limits for AI agents that hold money, enforced by a NEAR smart contract.**
 
-An AI agent that can pay for things can be tricked into paying the wrong party, and its key can be stolen. Leash keeps the money in a vault contract that the agent can only reach through one policy-checked method. Prompt injection and key theft are limited to what the policy allows. The owner controls the vault with a post-quantum (ML-DSA-65) key, and each payment anchors a hash of the AI inference behind it.
+Even if the AI is tricked or its key is stolen, your money can't be drained, and every payment carries a TEE-signed record of why the AI paid.
 
-Built at NEAR HACKATHON for the AI Security & Defense track. All code here was written during the hackathon window.
+Built at NEAR HACKATHON for the **AI Security & Defense** track. **Live site:** https://leash-ten.vercel.app (reads the testnet vault).
+
+## The problem
+
+AI agents are starting to pay for things on their own. Today you either hand the agent your key, so a trick or a theft empties the wallet, or you approve every payment yourself, so it isn't autonomous. And agents do get tricked: in our tests, real models paid an attacker's account in 13 of 14 runs when a bill simply named that account as payee.
+
+## What Leash does
+
+The money sits in a vault contract on NEAR. The agent never holds it. It can only ask the vault to pay, and the vault checks the owner's rules first: approved payees, a per-payment limit, a daily limit, and a pause switch. Anything else is refused and recorded on-chain.
+
+| Threat | What happens |
+|---|---|
+| The AI is tricked into paying an attacker | The vault refuses: the attacker is not on the allowlist |
+| The agent's key is stolen | It can only call one method, under the same limits. Worst case is one day's cap to approved payees |
+| A quantum computer breaks the agent's classical key | The owner signs pause and revoke with a post-quantum ML-DSA key, and NEAR refuses the old key |
+| "Why did the AI pay?" | Each payment anchors a hash of the exact model request and response, with the model's TEE signature |
+
+**Red Team Mode** runs these attacks live from the dashboard and shows each result from the chain.
+
+## Demo
+
+- Live site: https://leash-ten.vercel.app. The agent service can spend, so it isn't hosted; paid tasks and Red Team run locally (see "Try it").
+- Walkthrough and what to say: [docs/DEMO.md](docs/DEMO.md).
+- Testnet vault: `warden-vault-1d4de2.testnet` ([explorer](https://testnet.nearblocks.io/address/warden-vault-1d4de2.testnet)).
 
 ## How it works
 
@@ -105,7 +128,7 @@ pnpm --filter agent dev
 pnpm --filter web dev
 ```
 
-Open http://localhost:3000/setup, create your owner key, and enroll it with the owner key saved in `.leash-keys/`. Then go to Activity and click **Run paid task**. You should see the payment in the feed, and **Verify receipt** opens its checks. Red Team is at `/redteam`. The landing page is at http://localhost:3000/.
+Open http://localhost:3000/setup, create your owner key, and enroll it with the classical owner key saved in `.leash-keys/`. This needs a NEAR testnet account and a deployed vault, which the bootstrap command above creates. Creating them from the app, and approving the post-quantum key from a connected wallet instead of pasting a key, is on the roadmap. Existing NEAR wallets don't sign with ML-DSA yet, so the owner console holds that key in the browser. Then go to Activity and click **Run paid task**. You should see the payment in the feed, and **Verify receipt** opens its checks. Red Team is at `/redteam`. The landing page is at http://localhost:3000/.
 
 ## Cross-chain settlement (NEAR Intents)
 
@@ -152,12 +175,12 @@ With `.env` in place, `pnpm --filter agent run live` runs a paid task and the in
 
 ## Roadmap
 
-Private prepaid credits, custom chains, a browser extension for key isolation, hardware wallet support, and token-level spend mandates.
+Create the account and vault from the app, wallet-approved enrollment of the post-quantum key, an agent key sealed in a TEE, in-app verification of the TEE attestation quote, a browser extension for key isolation, hardware wallet support, private prepaid credits and token-level spend mandates.
 
 ## Libraries and AI-generated code
 
 - **Libraries:** near-sdk, near-workspaces, cargo-near, `@fastnear/api`, `@fastnear/ml-dsa-65`, `@fastnear/utils`, `@noble/curves`, `@noble/hashes`, Next.js, React, Tailwind CSS, Inter Tight (Google Fonts).
-- **AI-generated code:** this project was built with Claude Code, which wrote most of the code under human direction. The landing page (`apps/web/components/landing`) started as a Google AI Studio template; its files keep their Apache-2.0 headers. The console reuses its theme.
+- **AI-generated code:** this project was built during the hackathon with Claude Code, which wrote most of the code under human direction. The landing page (`apps/web/components/landing`) started as a Google AI Studio template; its files keep their Apache-2.0 headers. The console reuses its theme.
 - **External services:** NEAR AI Cloud for TEE inference, NEAR Intents 1Click API for settlement quotes, OutLayer for the optional sealed agent key.
 
 ## License
