@@ -27,6 +27,7 @@ The money sits in a vault contract on NEAR. The agent never holds it. It can onl
 
 ## Demo
 
+- Demo video (X post): https://x.com/Prem469709/status/2121539177808556356
 - Live site: https://ironrein.vercel.app. The agent service can spend, so it isn't hosted; paid tasks and Red Team run locally (see "Try it").
 - Walkthrough and what to say: [docs/DEMO.md](docs/DEMO.md).
 - Testnet vault: `warden-vault-1d4de2.testnet` ([explorer](https://testnet.nearblocks.io/address/warden-vault-1d4de2.testnet)).
