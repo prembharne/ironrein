@@ -4,7 +4,7 @@
 
 **Quantum-safe spending limits for AI agents that hold money, enforced by a NEAR smart contract.**
 
-Even if the AI is tricked or its key is stolen, your money can't be drained, and every payment carries a TEE-signed record of why the AI paid.
+Even if the AI is tricked or its key is stolen, the loss stays inside limits the owner set, the owner can shut the agent down with a post-quantum key, and every payment carries a TEE-signed record of why the AI paid.
 
 Built at NEAR HACKATHON for the **AI Security & Defense** track. **Live site:** https://ironrein.vercel.app (reads the testnet vault).
 
@@ -58,7 +58,7 @@ flowchart LR
 | Enclave signer for the sealed agent key (optional) | [enclave/agent-signer](enclave/agent-signer/src/lib.rs) |
 | Types and receipt hashing | [packages/shared](packages/shared/src/index.ts) |
 
-More detail: [architecture](docs/ARCHITECTURE.md), [threat model](docs/THREAT_MODEL.md), [demo script](docs/DEMO.md).
+More detail: [architecture](docs/ARCHITECTURE.md), [threat model](docs/THREAT_MODEL.md), [status: what is verified and what is not](docs/STATUS.md), [demo script](docs/DEMO.md), [security policy](SECURITY.md). The original planning documents are in [docs/history](docs/history).
 
 ## For reviewers
 
@@ -83,7 +83,7 @@ pnpm typecheck
 cd contracts/vault && cargo test --lib
 ```
 
-What was run live on testnet but can't be re-run without keys: a paid task with the real model, the payee-swap attack, and the Q-Day drill signed with a real ML-DSA key. [docs/DEMO.md](docs/DEMO.md) and [PROGRESS.md](PROGRESS.md) record exactly what was verified and what was not.
+What was run live on testnet but can't be re-run without keys: a paid task with the real model, the payee-swap attack, and the Q-Day drill signed with a real ML-DSA key. [docs/STATUS.md](docs/STATUS.md) records exactly what was verified and what was not.
 
 ## Red Team Mode
 

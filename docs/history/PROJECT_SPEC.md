@@ -1,3 +1,5 @@
+> **Historical planning document.** Written before the build, as the brief for the AI coding assistant. Some details changed along the way (for example the project was renamed to Ironrein). For the current state, read the [README](../../README.md), [architecture](../ARCHITECTURE.md), [threat model](../THREAT_MODEL.md) and [status](../STATUS.md).
+
 # PROJECT_SPEC.md: Ironrein (complete project documentation)
 
 > **Purpose of this file:** the single source of truth for the Ironrein project. An AI assistant (or a human) should be able to continue the work from this file alone, without guessing.

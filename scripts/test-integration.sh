@@ -7,9 +7,9 @@ cd "$(dirname "$0")/.."
 
 MSYS_NO_PATHCONV=1 docker run --rm \
   -v "$(pwd -W 2>/dev/null || pwd):/work" \
-  -v warden-cargo-registry:/usr/local/cargo/registry \
-  -v warden-target:/target \
-  -v warden-tools:/tools \
+  -v ironrein-cargo-registry:/usr/local/cargo/registry \
+  -v ironrein-target:/target \
+  -v ironrein-tools:/tools \
   -e CARGO_TARGET_DIR=/target \
   -w /work/contracts \
   rust:1.99-trixie bash -c '

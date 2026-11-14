@@ -11,7 +11,7 @@ if [ "${1:-}" = "stop" ]; then
 fi
 
 docker rm -f ironrein-sandbox >/dev/null 2>&1 || true
-MSYS_NO_PATHCONV=1 docker run -d --name ironrein-sandbox -p 3030:3030 -v warden-target:/target:ro rust:1.99-trixie bash -c '
+MSYS_NO_PATHCONV=1 docker run -d --name ironrein-sandbox -p 3030:3030 -v ironrein-target:/target:ro rust:1.99-trixie bash -c '
   BIN=$(ls -d /target/release/build/near-sandbox-*/out/.near/near-sandbox-*/near-sandbox | head -1)
   "$BIN" --home /tmp/near init >/dev/null 2>&1
   # Match testnet. FastNear reuses a block hash for up to 6 hours, which outlives the

@@ -1,8 +1,17 @@
 {
   "name": "ironrein",
+  "version": "0.1.0",
   "private": true,
+  "description": "Quantum-safe spending limits for AI agents on NEAR: a vault contract enforces the owner's rules, and every payment carries a TEE-signed receipt.",
   "license": "MIT",
-  "engines": { "node": ">=22.9.0" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prembharne/ironrein.git"
+  },
+  "homepage": "https://ironrein.vercel.app",
+  "engines": {
+    "node": ">=22.9.0"
+  },
   "scripts": {
     "test": "pnpm -r --if-present test",
     "typecheck": "pnpm -r --if-present typecheck"

@@ -10,7 +10,7 @@ Target length is 60 to 90 seconds for the core, with the blocked attack in the f
 - [ ] Agent and merchant running with a real `NEAR_AI_KEY`
 - [ ] `SETTLE_ASSET_ID` and `SETTLE_RECIPIENT` set, and the merchant's startup line ends with `settles in nep141:base-...`
 - [ ] Vault not paused, and the agent key is set. If not, use "Unpause and restore" on the Kill switch page
-- [ ] Rehearsed 5 times, per the definition of done
+- [ ] Rehearsed at least once end to end
 
 ## Script
 
@@ -40,7 +40,3 @@ The receipt page is the proof. Spend about 10 seconds on it during step 3:
 - Hardware-signed means the TEE signature on the inference, and only when the receipt shows it verified.
 - The settlement card is a live NEAR Intents quote. Say "priced" or "quoted", never "settled" or "swapped": no funds cross chains on testnet.
 - In our runs the real models ignored the injected text and fell for the swapped payee. Call the second one a payee swap or invoice fraud, not prompt injection. Show whichever happens on the day: if the model attempts neither, the UI says so and sends the attack directly, and that must never be presented as the model being fooled.
-
-## X post requirements
-
-Say it was built at NEAR HACKATHON, tag @NEARProtocol and #NEARHackathon, and attach the video. Open with the user's problem, show one complete moment, explain NEAR's role concretely, and end with the repo link and a specific question.
